@@ -58,6 +58,7 @@ describe('Clock class tests', () => {
                 setTimeout(() => {
                     expect(clock.toString()).toBe(maxLimit);
                 }, 30000);
+
                 jest.runAllTimers();
             });
 

@@ -1,8 +1,6 @@
 const Time = require('../time/time');
 const { MAX_CLOCK_SECONDS, MIN_CLOCK_SECONDS } = require('./utils/consts');
 
-// ask if i should allow negative time here?
-
 class Clock extends Time {
     constructor(
         { seconds = null, minutes = null, hours = null } = {},
@@ -27,8 +25,8 @@ class Clock extends Time {
         if (this.interval) return;
 
         this.interval = setInterval(() => {
+            this.addSeconds(1);
             if (this.tSeconds === MAX_CLOCK_SECONDS) this.pause();
-            else this.addSeconds(1);
         }, 1000);
     }
 

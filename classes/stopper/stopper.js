@@ -4,8 +4,6 @@ const {
     MIN_STOPPER_SECONDS,
 } = require('../stopper/utils/consts');
 
-// check what's the time limits of stopper?
-
 class Stopper extends Time {
     constructor(
         { seconds = null, minutes = null, hours = null } = {},
@@ -30,18 +28,13 @@ class Stopper extends Time {
         if (this.interval) return;
 
         this.interval = setInterval(() => {
+            this.subSeconds(1);
             if (this.tSeconds === MIN_STOPPER_SECONDS) this.pause();
-            else this.subSeconds(1);
         }, 1000);
     }
 
     pause() {
         clearInterval(this.interval);
-    }
-
-    say() {
-        console.log(this.tSeconds);
-        console.log(this.toString());
     }
 }
 
