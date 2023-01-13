@@ -9,7 +9,7 @@ describe('Time class tests', () => {
                 [{ seconds: 0, minutes: 0, hours: -50 }, '-50:00:00'],
                 [{ seconds: 0, minutes: 0, hours: -100 }, '-99:59:59'],
             ])(
-                'creating time with %s hours should returns time: %s',
+                'creating time with params: %s should returns time: %s',
                 (params, result) => {
                     const time = new Time(params);
                     expect(time.toString()).toBe(result);
@@ -22,7 +22,7 @@ describe('Time class tests', () => {
                 [{ seconds: 0, minutes: -90, hours: 0 }, '-01:30:00'],
                 [{ seconds: 0, minutes: -10000, hours: 0 }, '-99:59:59'],
             ])(
-                'creating time with %s minutes should returns time: %s',
+                'creating time with params: %s should returns time: %s',
                 (params, result) => {
                     const time = new Time(params);
                     expect(time.toString()).toBe(result);
@@ -35,7 +35,7 @@ describe('Time class tests', () => {
                 [{ seconds: -70, minutes: 0, hours: 0 }, '-00:01:10'],
                 [{ seconds: -380000, minutes: 0, hours: 0 }, '-99:59:59'],
             ])(
-                'creating time with %s seconds should returns time: %s',
+                'creating time with params: %s should returns time: %s',
                 (params, result) => {
                     const time = new Time(params);
                     expect(time.toString()).toBe(result);
