@@ -25,7 +25,7 @@ class Clock extends Time {
         if (this.interval) return;
 
         this.interval = setInterval(() => {
-            this.addSeconds(1);
+            super.addSeconds(1);
             if (this.tSeconds === MAX_CLOCK_SECONDS) this.pause();
         }, 1000);
     }

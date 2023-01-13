@@ -28,7 +28,7 @@ class Stopper extends Time {
         if (this.interval) return;
 
         this.interval = setInterval(() => {
-            this.subSeconds(1);
+            super.subSeconds(1);
             if (this.tSeconds === MIN_STOPPER_SECONDS) this.pause();
         }, 1000);
     }
