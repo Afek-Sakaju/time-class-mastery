@@ -2,7 +2,7 @@ const Stopper = require('../stopper');
 
 describe('Stopper class tests', () => {
     describe('valid cases', () => {
-        describe('start & pause methods tests', () => {
+        describe('start & pause & stop methods tests', () => {
             /*beforeEach(()=>{
                     jest.runAllTimers();
 
@@ -77,6 +77,25 @@ describe('Stopper class tests', () => {
                     setTimeout(() => {
                         stopper.pause();
                     }, 10000);
+                    jest.runAllTimers();
+
+                    expect(stopper.toString()).toBe(result);
+                }
+            );
+
+            test.each([
+                [{ seconds: 0, minutes: 0, hours: 2 }, '02:00:00'],
+                [{ seconds: 0, minutes: 30, hours: 0 }, '00:30:00'],
+                [{ seconds: 45, minutes: 0, hours: 0 }, '00:00:45'],
+                [{ seconds: 10, minutes: 30, hours: 1 }, '01:30:10'],
+            ])(
+                'stopper of %s units, start method active, after 20 seconds using stop method returns %s',
+                (params, result) => {
+                    const stopper = new Stopper(params, true);
+
+                    setTimeout(() => {
+                        stopper.stop();
+                    }, 20000);
                     jest.runAllTimers();
 
                     expect(stopper.toString()).toBe(result);

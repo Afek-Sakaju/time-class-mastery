@@ -11,6 +11,7 @@ class Stopper extends Time {
     ) {
         super({ seconds, minutes, hours });
 
+        this.initialSeconds = null;
         this.interval = null;
 
         if (autoStart) this.start();
@@ -27,6 +28,7 @@ class Stopper extends Time {
     start() {
         if (this.interval) return;
 
+        this.initialSeconds = this.tSeconds;
         this.interval = setInterval(() => {
             super.subSeconds(1);
             if (this.tSeconds === MIN_STOPPER_SECONDS) this.pause();
@@ -35,6 +37,11 @@ class Stopper extends Time {
 
     pause() {
         clearInterval(this.interval);
+    }
+
+    stop() {
+        clearInterval(this.interval);
+        this.tSeconds = this.initialSeconds;
     }
 }
 
