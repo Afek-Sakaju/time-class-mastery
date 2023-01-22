@@ -1,16 +1,30 @@
 const Clock = require('../clock');
+const {MAX_CLOCK_SECONDS, MIN_CLOCK_SECONDS} = require('../utils/consts')
 
 describe('Clock class tests', () => {
+    describe('inheretance tests',  () => {
+        const clock = new Clock({hours: 0, minutes: 0, seconds: 0});
+        clock.addSeconds(5);
+        expect(clock.seconds).toBe(5);
+        clock.addMinutes(10);
+        expect(clock.minutes).toBe(10);
+        clock.addHours(3);
+        expect(clock.hours).toBe(3);
+        clock.addHours(100)
+        expect(clock.totalSeconds).toBe(MAX_CLOCK_SECONDS);
+        clock.subHours(200)
+        expect(clock.totalSeconds).toBe(MIN_CLOCK_SECONDS);
+    });
+
     describe('valid cases', () => {
         describe('start & pause methods tests', () => {
-            /*beforeEach(()=>{
-                    jest.runAllTimers();
+            beforeAll(() => {
+                jest.useFakeTimers();
+            })
 
-            *** not working that way, only after each setTimeout manually
-            
-            })*/
-
-            jest.useFakeTimers();
+            afterEach(() => {
+                jest.runAllTimers();
+            });
 
             test.each([
                 [{ seconds: 0, minutes: 0, hours: 2 }, '02:00:15'],
@@ -25,25 +39,26 @@ describe('Clock class tests', () => {
                     setTimeout(() => {
                         expect(clock.toString()).toBe(result);
                     }, 15000);
-                    jest.runAllTimers();
                 }
             );
 
             test.each([
-                [{ seconds: 0, minutes: 0, hours: 2 }, '02:00:20'],
-                [{ seconds: 0, minutes: 30, hours: 0 }, '00:30:20'],
-                [{ seconds: 45, minutes: 0, hours: 0 }, '00:01:05'],
-                [{ seconds: 10, minutes: 30, hours: 1 }, '01:30:30'],
+                [{ seconds: 0, minutes: 0, hours: 2 }, '02:00:00', '02:00:20'],
+                [{ seconds: 0, minutes: 30, hours: 0 }, '00:30:00', '00:30:20'],
+                [{ seconds: 45, minutes: 0, hours: 0 }, '00:00:45', '00:01:05'],
+                [{ seconds: 10, minutes: 30, hours: 1 }, '01:30:10', '01:30:30'],
             ])(
                 'clock of %s units, activates start method then after 20 seconds returns %s',
-                (params, result) => {
+                (params, curr, result) => {
                     const clock = new Clock(params, false);
+                    expect(clock.toString()).toBe(curr);
                     clock.start();
 
                     setTimeout(() => {
                         expect(clock.toString()).toBe(result);
                     }, 20000);
-                    jest.runAllTimers();
+
+                    expect(clock.toString()).toBe(curr);
                 }
             );
 
@@ -59,7 +74,7 @@ describe('Clock class tests', () => {
                     expect(clock.toString()).toBe(maxLimit);
                 }, 30000);
 
-                jest.runAllTimers();
+                // jest.runAllTimers();
             });
 
             test.each([
@@ -75,7 +90,6 @@ describe('Clock class tests', () => {
                     setTimeout(() => {
                         clock.pause();
                     }, 10000);
-                    jest.runAllTimers();
 
                     expect(clock.toString()).toBe(result);
                 }
