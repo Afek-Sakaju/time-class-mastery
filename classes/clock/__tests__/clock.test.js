@@ -1,5 +1,4 @@
 const Clock = require('../clock');
-const {MAX_CLOCK_SECONDS, MIN_CLOCK_SECONDS} = require('../utils/consts')
 
 describe('Clock class tests', () => {
     describe('inheretance tests',  () => {
@@ -11,9 +10,9 @@ describe('Clock class tests', () => {
         clock.addHours(3);
         expect(clock.hours).toBe(3);
         clock.addHours(100)
-        expect(clock.totalSeconds).toBe(MAX_CLOCK_SECONDS);
+        expect(clock.totalSeconds).toBe(Clock.MAX_SECONDS);
         clock.subHours(200)
-        expect(clock.totalSeconds).toBe(MIN_CLOCK_SECONDS);
+        expect(clock.totalSeconds).toBe(Clock.MIN_SECONDS);
     });
 
     describe('valid cases', () => {
@@ -89,9 +88,10 @@ describe('Clock class tests', () => {
 
                     setTimeout(() => {
                         clock.pause();
+                        expect(clock.toString()).toBe(result);
                     }, 10000);
 
-                    expect(clock.toString()).toBe(result);
+                    // expect(clock.toString()).toBe(result);
                 }
             );
         });
