@@ -6,14 +6,19 @@ describe('Countdown class tests', () => {
             jest.useFakeTimers();
 
             test.each([
-                [{ seconds: 0, minutes: 0, hours: 2 }, '02:00:00'],
-                [{ seconds: 0, minutes: 30, hours: 0 }, '00:30:00'],
-                [{ seconds: 45, minutes: 0, hours: 0 }, '00:00:45'],
-                [{ seconds: 10, minutes: 30, hours: 1 }, '01:30:10'],
+                [{ seconds: 0, minutes: 0, hours: 2 }, '02:00:00', '02:00:00'],
+                [{ seconds: 0, minutes: 30, hours: 0 }, '00:30:00', '00:30:00'],
+                [{ seconds: 45, minutes: 0, hours: 0 }, '00:00:45', '00:00:45'],
+                [
+                    { seconds: 10, minutes: 30, hours: 1 },
+                    '01:30:10',
+                    '01:30:10',
+                ],
             ])(
                 'countdown of %s units, autoStart set to false then after 15 seconds returns %s',
-                (params, result) => {
+                (params, current, result) => {
                     const countdown = new Countdown(params, false);
+                    expect(countdown.toString()).toBe(current);
 
                     setTimeout(() => {
                         expect(countdown.toString()).toBe(result);
@@ -21,24 +26,6 @@ describe('Countdown class tests', () => {
                     jest.runAllTimers();
                 }
             );
-
-            /* test.each([
-                [{ seconds: 0, minutes: 0, hours: 2 }, '01:59:40'],
-                [{ seconds: 0, minutes: 30, hours: 0 }, '00:29:40'],
-                [{ seconds: 45, minutes: 0, hours: 0 }, '00:00:25'],
-                [{ seconds: 20, minutes: 30, hours: 1 }, '01:30:00'],
-            ])(
-                'countdown of %s units, activates start method then after 20 seconds returns %s',
-                (params, result) => {
-                    const countdown = new Countdown(params, false);
-                    countdown.start();
-
-                    setTimeout(() => {
-                        expect(countdown.toString()).toBe(result);
-                    }, 20000);
-                    jest.runAllTimers();
-                }
-            ); */
 
             test.each([
                 [{ seconds: 0, minutes: 0, hours: 2 }, '01:59:40'],
