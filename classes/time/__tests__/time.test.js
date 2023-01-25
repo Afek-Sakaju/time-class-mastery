@@ -4,10 +4,10 @@ describe('Time class tests', () => {
     describe('valid cases', () => {
         describe('creation tests', () => {
             test.each([
-                [{ seconds: 0, minutes: 0, hours: 101 }, '99:59:59'],
-                [{ seconds: 0, minutes: 0, hours: 15 }, '15:00:00'],
-                [{ seconds: 0, minutes: 0, hours: -50 }, '-50:00:00'],
-                [{ seconds: 0, minutes: 0, hours: -100 }, '-99:59:59'],
+                [{ hours: 101, minutes: 0, seconds: 0 }, '99:59:59'],
+                [{ hours: 15, minutes: 0, seconds: 0 }, '15:00:00'],
+                [{ hours: -50, minutes: 0, seconds: 0 }, '-50:00:00'],
+                [{ hours: -100, minutes: 0, seconds: 0 }, '-99:59:59'],
             ])(
                 'creating time with params: %s should returns time: %s',
                 (params, result) => {
@@ -17,10 +17,10 @@ describe('Time class tests', () => {
             );
 
             test.each([
-                [{ seconds: 0, minutes: 10000, hours: 0 }, '99:59:59'],
-                [{ seconds: 0, minutes: 90, hours: 0 }, '01:30:00'],
-                [{ seconds: 0, minutes: -90, hours: 0 }, '-01:30:00'],
-                [{ seconds: 0, minutes: -10000, hours: 0 }, '-99:59:59'],
+                [{ hours: 0, minutes: 10000, seconds: 0 }, '99:59:59'],
+                [{ hours: 0, minutes: 90, seconds: 0 }, '01:30:00'],
+                [{ hours: 0, minutes: -90, seconds: 0 }, '-01:30:00'],
+                [{ hours: 0, minutes: -10000, seconds: 0 }, '-99:59:59'],
             ])(
                 'creating time with params: %s should returns time: %s',
                 (params, result) => {
@@ -30,10 +30,10 @@ describe('Time class tests', () => {
             );
 
             test.each([
-                [{ seconds: 0, minutes: 0, hours: 0 }, '00:00:00'],
-                [{ seconds: 70, minutes: 0, hours: 0 }, '00:01:10'],
-                [{ seconds: -70, minutes: 0, hours: 0 }, '-00:01:10'],
-                [{ seconds: -380000, minutes: 0, hours: 0 }, '-99:59:59'],
+                [{ hours: 0, minutes: 0, seconds: 0 }, '00:00:00'],
+                [{ hours: 0, minutes: 0, seconds: 70 }, '00:01:10'],
+                [{ hours: 0, minutes: 0, seconds: -70 }, '-00:01:10'],
+                [{ hours: 0, minutes: 0, seconds: -380000 }, '-99:59:59'],
             ])(
                 'creating time with params: %s should returns time: %s',
                 (params, result) => {
@@ -43,10 +43,10 @@ describe('Time class tests', () => {
             );
 
             test.each([
-                [{ seconds: 0, minutes: 0, hours: 0 }, '00:00:00'],
-                [{ seconds: 10, minutes: 30, hours: 1 }, '01:30:10'],
-                [{ seconds: 0, minutes: 10, hours: 3 }, '03:10:00'],
-                [{ seconds: 50, minutes: 50, hours: 50 }, '50:50:50'],
+                [{ hours: 0, minutes: 0, seconds: 0 }, '00:00:00'],
+                [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:10'],
+                [{ hours: 3, minutes: 10, seconds: 0 }, '03:10:00'],
+                [{ hours: 50, minutes: 50, seconds: 50 }, '50:50:50'],
             ])(
                 'creating time with:%s units should returns time: %s',
                 (params, result) => {
@@ -225,11 +225,11 @@ describe('Time class tests', () => {
             );
 
             test.each([
-                [{ seconds: 0, minutes: 0, hours: 0 }, '15:30:00'],
-                [{ seconds: 30, minutes: 20, hours: 1 }, '16:50:30'],
-                [{ seconds: 0, minutes: 0, hours: 100 }, '99:59:59'],
-                [{ seconds: 0, minutes: -30, hours: -1 }, '14:00:00'],
-                [{ seconds: 0, minutes: -30, hours: -15 }, '00:00:00'],
+                [{ hours: 0, minutes: 0, seconds: 0 }, '15:30:00'],
+                [{ hours: 1, minutes: 20, seconds: 30 }, '16:50:30'],
+                [{ hours: 100, minutes: 0, seconds: 0 }, '99:59:59'],
+                [{ hours: -1, minutes: -30, seconds: 0 }, '14:00:00'],
+                [{ hours: -15, minutes: -30, seconds: 0 }, '00:00:00'],
             ])(
                 'time created with:%s added to initial time:"15:30:00", then results:%s',
                 (params, result) => {
@@ -240,11 +240,11 @@ describe('Time class tests', () => {
             );
 
             test.each([
-                [{ seconds: 0, minutes: 30, hours: 1 }, '14:00:00'],
-                [{ seconds: 0, minutes: 30, hours: 15 }, '00:00:00'],
-                [{ seconds: 0, minutes: 0, hours: 0 }, '15:30:00'],
-                [{ seconds: -30, minutes: -20, hours: -1 }, '16:50:30'],
-                [{ seconds: 0, minutes: 0, hours: -100 }, '99:59:59'],
+                [{ hours: 1, minutes: 30, seconds: 0 }, '14:00:00'],
+                [{ hours: 15, minutes: 30, seconds: 0 }, '00:00:00'],
+                [{ hours: 0, minutes: 0, seconds: 0 }, '15:30:00'],
+                [{ hours: -1, minutes: -20, seconds: -30 }, '16:50:30'],
+                [{ hours: -100, minutes: 0, seconds: 0 }, '99:59:59'],
             ])(
                 'time created with:%s subbed from initial time:"15:30:00", then results:%s',
                 (params, result) => {
@@ -337,16 +337,16 @@ describe('Time class tests', () => {
         let time;
 
         beforeAll(() => {
-            time = new Time({ seconds: 20, minutes: 15, hours: 10 });
+            time = new Time({ hours: 10, minutes: 15, seconds: 20 });
         });
 
         test.each([
-            [{ seconds: 'bob', minutes: 'bob', hours: 'bob' }],
-            [{ seconds: '', minutes: 15, hours: 15 }],
-            [{ seconds: 15, minutes: '', hours: 15 }],
-            [{ seconds: 15, minutes: 15, hours: '' }],
-            [{ seconds: 10, minutes: [20], hours: [30] }],
-            [{ seconds: 0, minutes: { a: 1 }, hours: { a: 2 } }],
+            [{ hours: 'bob', minutes: 'bob', seconds: 'bob' }],
+            [{ hours: 15, minutes: 15, seconds: '' }],
+            [{ hours: 15, minutes: '', seconds: 15 }],
+            [{ hours: '', minutes: 15, seconds: 15 }],
+            [{ hours: [30], minutes: [20], seconds: 10 }],
+            [{ hours: { a: 2 }, minutes: { a: 1 }, seconds: 0 }],
         ])('creation of time with invalid params', (params) => {
             expect(() => {
                 new Time(params);
