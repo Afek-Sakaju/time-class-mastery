@@ -3,14 +3,13 @@ const Clock = require('../clock');
 describe('Clock class tests', () => {
     describe('valid cases', () => {
         describe('start & pause methods tests', () => {
-            /*beforeEach(()=>{
-                    jest.runAllTimers();
+            beforeAll(() => {
+                jest.useFakeTimers();
+            });
 
-            *** not working that way, only after each setTimeout manually
-            
-            })*/
-
-            jest.useFakeTimers();
+            afterEach(() => {
+                jest.runAllTimers();
+            });
 
             test.each([
                 [{ seconds: 0, minutes: 0, hours: 2 }, '02:00:15'],
@@ -25,7 +24,6 @@ describe('Clock class tests', () => {
                     setTimeout(() => {
                         expect(clock.toString()).toBe(result);
                     }, 15000);
-                    jest.runAllTimers();
                 }
             );
 
@@ -43,7 +41,6 @@ describe('Clock class tests', () => {
                     setTimeout(() => {
                         expect(clock.toString()).toBe(result);
                     }, 20000);
-                    jest.runAllTimers();
                 }
             );
 
@@ -58,8 +55,6 @@ describe('Clock class tests', () => {
                 setTimeout(() => {
                     expect(clock.toString()).toBe(maxLimit);
                 }, 30000);
-
-                jest.runAllTimers();
             });
 
             test.each([
@@ -74,10 +69,8 @@ describe('Clock class tests', () => {
 
                     setTimeout(() => {
                         clock.pause();
+                        expect(clock.toString()).toBe(result);
                     }, 10000);
-                    jest.runAllTimers();
-
-                    expect(clock.toString()).toBe(result);
                 }
             );
         });

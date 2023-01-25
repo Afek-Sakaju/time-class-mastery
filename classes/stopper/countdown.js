@@ -1,10 +1,9 @@
 const Time = require('../time/time');
-const {
-    MAX_STOPPER_SECONDS,
-    MIN_STOPPER_SECONDS,
-} = require('../stopper/utils/consts');
 
-class Stopper extends Time {
+class Countdown extends Time {
+    static MAX_COUNTDOWN_SECONDS = 86399; // 23:59:59
+    static MIN_COUNTDOWN_SECONDS = 0; // 00:00:00
+
     constructor(
         { seconds = null, minutes = null, hours = null } = {},
         autoStart = false
@@ -18,10 +17,10 @@ class Stopper extends Time {
     }
 
     validateLimiter() {
-        if (this.tSeconds > MAX_STOPPER_SECONDS) {
-            this.tSeconds = MAX_STOPPER_SECONDS;
-        } else if (this.tSeconds < MIN_STOPPER_SECONDS) {
-            this.tSeconds = MIN_STOPPER_SECONDS;
+        if (this.tSeconds > Countdown.MAX_COUNTDOWN_SECONDS) {
+            this.tSeconds = Countdown.MAX_COUNTDOWN_SECONDS;
+        } else if (this.tSeconds < Countdown.MIN_COUNTDOWN_SECONDS) {
+            this.tSeconds = Countdown.MIN_COUNTDOWN_SECONDS;
         }
     }
 
@@ -31,7 +30,7 @@ class Stopper extends Time {
         this.initialSeconds = this.tSeconds;
         this.interval = setInterval(() => {
             super.subSeconds(1);
-            if (this.tSeconds === MIN_STOPPER_SECONDS) this.pause();
+            if (this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS) this.pause();
         }, 1000);
     }
 
@@ -45,4 +44,4 @@ class Stopper extends Time {
     }
 }
 
-module.exports = Stopper;
+module.exports = Countdown;

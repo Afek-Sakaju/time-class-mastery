@@ -1,15 +1,8 @@
-const Stopper = require('../stopper');
+const Countdown = require('../countdown');
 
-describe('Stopper class tests', () => {
+describe('Countdown class tests', () => {
     describe('valid cases', () => {
         describe('start & pause & stop methods tests', () => {
-            /*beforeEach(()=>{
-                    jest.runAllTimers();
-
-            *** not working that way, only after each setTimeout manually
-            
-            })*/
-
             jest.useFakeTimers();
 
             test.each([
@@ -18,16 +11,34 @@ describe('Stopper class tests', () => {
                 [{ seconds: 45, minutes: 0, hours: 0 }, '00:00:45'],
                 [{ seconds: 10, minutes: 30, hours: 1 }, '01:30:10'],
             ])(
-                'stopper of %s units, autoStart set to false then after 15 seconds returns %s',
+                'countdown of %s units, autoStart set to false then after 15 seconds returns %s',
                 (params, result) => {
-                    const stopper = new Stopper(params, false);
+                    const countdown = new Countdown(params, false);
 
                     setTimeout(() => {
-                        expect(stopper.toString()).toBe(result);
+                        expect(countdown.toString()).toBe(result);
                     }, 15000);
                     jest.runAllTimers();
                 }
             );
+
+            /* test.each([
+                [{ seconds: 0, minutes: 0, hours: 2 }, '01:59:40'],
+                [{ seconds: 0, minutes: 30, hours: 0 }, '00:29:40'],
+                [{ seconds: 45, minutes: 0, hours: 0 }, '00:00:25'],
+                [{ seconds: 20, minutes: 30, hours: 1 }, '01:30:00'],
+            ])(
+                'countdown of %s units, activates start method then after 20 seconds returns %s',
+                (params, result) => {
+                    const countdown = new Countdown(params, false);
+                    countdown.start();
+
+                    setTimeout(() => {
+                        expect(countdown.toString()).toBe(result);
+                    }, 20000);
+                    jest.runAllTimers();
+                }
+            ); */
 
             test.each([
                 [{ seconds: 0, minutes: 0, hours: 2 }, '01:59:40'],
@@ -35,20 +46,20 @@ describe('Stopper class tests', () => {
                 [{ seconds: 45, minutes: 0, hours: 0 }, '00:00:25'],
                 [{ seconds: 20, minutes: 30, hours: 1 }, '01:30:00'],
             ])(
-                'stopper of %s units, activates start method then after 20 seconds returns %s',
+                'countdown of %s units, activates start method then after 20 seconds returns %s',
                 (params, result) => {
-                    const stopper = new Stopper(params, false);
-                    stopper.start();
+                    const countdown = new Countdown(params, false);
+                    countdown.start();
 
                     setTimeout(() => {
-                        expect(stopper.toString()).toBe(result);
+                        expect(countdown.toString()).toBe(result);
                     }, 20000);
                     jest.runAllTimers();
                 }
             );
 
-            test('stopper: 00:00:30 auto pauses after reaching "00:00:00"', () => {
-                const stopper = new Stopper(
+            test('countdown: 00:00:30 auto pauses after reaching "00:00:00"', () => {
+                const countdown = new Countdown(
                     {
                         seconds: 30,
                         minutes: 0,
@@ -59,7 +70,7 @@ describe('Stopper class tests', () => {
                 const maxLimit = '00:00:00';
 
                 setTimeout(() => {
-                    expect(stopper.toString()).toBe(maxLimit);
+                    expect(countdown.toString()).toBe(maxLimit);
                 }, 60000);
                 jest.runAllTimers();
             });
@@ -70,16 +81,16 @@ describe('Stopper class tests', () => {
                 [{ seconds: 45, minutes: 0, hours: 0 }, '00:00:35'],
                 [{ seconds: 10, minutes: 30, hours: 1 }, '01:30:00'],
             ])(
-                'stopper of %s units, start method active, after 10 seconds using pause method returns %s',
+                'countdown of %s units, start method active, after 10 seconds using pause method returns %s',
                 (params, result) => {
-                    const stopper = new Stopper(params, true);
+                    const countdown = new Countdown(params, true);
 
                     setTimeout(() => {
-                        stopper.pause();
+                        countdown.pause();
                     }, 10000);
                     jest.runAllTimers();
 
-                    expect(stopper.toString()).toBe(result);
+                    expect(countdown.toString()).toBe(result);
                 }
             );
 
@@ -89,25 +100,25 @@ describe('Stopper class tests', () => {
                 [{ seconds: 45, minutes: 0, hours: 0 }, '00:00:45'],
                 [{ seconds: 10, minutes: 30, hours: 1 }, '01:30:10'],
             ])(
-                'stopper of %s units, start method active, after 20 seconds using stop method returns %s',
+                'countdown of %s units, start method active, after 20 seconds using stop method returns %s',
                 (params, result) => {
-                    const stopper = new Stopper(params, true);
+                    const countdown = new Countdown(params, true);
 
                     setTimeout(() => {
-                        stopper.stop();
+                        countdown.stop();
                     }, 20000);
                     jest.runAllTimers();
 
-                    expect(stopper.toString()).toBe(result);
+                    expect(countdown.toString()).toBe(result);
                 }
             );
         });
 
-        describe('stopper creation with autoStart true tests', () => {});
+        describe('countdown creation with autoStart true tests', () => {});
 
-        describe('stopper creation with autoStart false tests', () => {});
+        describe('countdown creation with autoStart false tests', () => {});
 
-        describe('stopper max seconds validation tests', () => {});
+        describe('countdown max seconds validation tests', () => {});
         // plan if the text are correct and how to write them
         // before starting writing them
     });
