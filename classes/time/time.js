@@ -8,9 +8,11 @@ const {
     minutesToTotalSeconds,
 } = require('./utils/calculators');
 const { validateNumber } = require('./utils/validators');
-const { MAX_TIME_SECONDS, MIN_TIME_SECONDS } = require('./utils/consts');
 
 class Time {
+    static MAX_TIME_SECONDS = 359999; // 99:59:59
+    static MIN_TIME_SECONDS = -359999; // -99:59:59
+
     constructor({ seconds = null, minutes = null, hours = null } = {}) {
         validateNumber(seconds, true);
         validateNumber(minutes, true);
@@ -27,10 +29,10 @@ class Time {
     }
 
     validateLimiter() {
-        if (this.tSeconds > MAX_TIME_SECONDS) {
-            this.tSeconds = MAX_TIME_SECONDS;
-        } else if (this.tSeconds < MIN_TIME_SECONDS) {
-            this.tSeconds = MIN_TIME_SECONDS;
+        if (this.tSeconds > Time.MAX_TIME_SECONDS) {
+            this.tSeconds = Time.MAX_TIME_SECONDS;
+        } else if (this.tSeconds < Time.MIN_TIME_SECONDS) {
+            this.tSeconds = Time.MIN_TIME_SECONDS;
         }
     }
 
