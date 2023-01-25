@@ -4,12 +4,16 @@ class Countdown extends Time {
     static MAX_COUNTDOWN_SECONDS = 86399; // 23:59:59
     static MIN_COUNTDOWN_SECONDS = 0; // 00:00:00
 
-    constructor({ seconds = null, minutes = null, hours = null } = {}) {
+    constructor(
+        { seconds = null, minutes = null, hours = null } = {},
+        autoStart = false
+    ) {
         super({ seconds, minutes, hours });
 
         this.initialSeconds = null;
         this.interval = null;
-        this.isStopped = false;
+
+        if (autoStart) this.start();
     }
 
     validateLimiter() {
@@ -20,20 +24,13 @@ class Countdown extends Time {
         }
     }
 
-    start(callBack) {
-        if (this.interval) this.pause();
-        if (this.isStopped) {
-            this.tSeconds = this.initialSeconds;
-            this.isStopped = false;
-        }
+    start() {
+        if (this.interval) return;
 
         this.initialSeconds = this.tSeconds;
         this.interval = setInterval(() => {
             super.subSeconds(1);
-            if (this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS) {
-                callBack();
-                this.pause();
-            }
+            if (this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS) this.pause();
         }, 1000);
     }
 
@@ -41,14 +38,9 @@ class Countdown extends Time {
         clearInterval(this.interval);
     }
 
-    resetCountdown() {
-        // name changed from "reset" to prevent override
-        this.tSeconds = this.initialSeconds;
-    }
-
     stop() {
         clearInterval(this.interval);
-        this.isStopped = true;
+        this.tSeconds = this.initialSeconds;
     }
 }
 

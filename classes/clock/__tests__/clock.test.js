@@ -159,6 +159,8 @@ describe('Clock class tests', () => {
                 }, 10000);
             }
         );
+
+        // TODO TESTS RESET()
     });
 
     test('invalid cases - inheritance of parameter validation', () => {
