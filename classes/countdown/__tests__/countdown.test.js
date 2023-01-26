@@ -189,13 +189,13 @@ describe('Countdown class tests', () => {
         );
 
         test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, '02:00:00', '02:00:00'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, '00:30:00', '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, '00:00:45', '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:10', '01:30:10'],
+            [{ hours: 2, minutes: 0, seconds: 0 }, '02:00:00'],
+            [{ hours: 0, minutes: 30, seconds: 0 }, '00:30:00'],
+            [{ hours: 0, minutes: 0, seconds: 45 }, '00:00:45'],
+            [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:10'],
         ])(
-            'countdown of %s units, starting countdown, after 10 seconds, activating stop method and start again, then returns %s',
-            (params, current, result) => {
+            'countdown of %s units, starting countdown, activating stop method and start again, should return reset clock',
+            (params, current) => {
                 const countdown = new Countdown(params);
                 countdown.start(tempCallBack);
                 expect(countdown.toString()).toBe(current);
@@ -207,7 +207,7 @@ describe('Countdown class tests', () => {
                 setTimeout(() => {
                     // to make sure the stop method indeed stopped the interval
                     countdown.start(tempCallBack);
-                    expect(countdown.toString()).toBe(result);
+                    expect(countdown.toString()).toBe('00:00:00');
                 }, 11000);
             }
         );

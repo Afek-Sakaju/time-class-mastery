@@ -23,7 +23,7 @@ class Countdown extends Time {
     start(callBack) {
         if (this.interval) this.pause();
         if (this.isStopped) {
-            this.tSeconds = this.initialSeconds;
+            super.reset();
             this.isStopped = false;
         }
 
@@ -47,7 +47,7 @@ class Countdown extends Time {
     }
 
     stop() {
-        clearInterval(this.interval);
+        this.pause();
         this.isStopped = true;
     }
 }
