@@ -24,11 +24,11 @@ class Clock extends Time {
     }
 
     start() {
-        if (this.interval) return;
+        // maybe i should check for existance of active interval
 
         this.interval = setInterval(() => {
-            super.addSeconds(1);
             if (this.tSeconds === Clock.MAX_CLOCK_SECONDS) this.pause();
+            super.addSeconds(1);
         }, 1000);
     }
 

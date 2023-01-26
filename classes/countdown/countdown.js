@@ -21,7 +21,8 @@ class Countdown extends Time {
     }
 
     start(callBack) {
-        if (this.interval) this.pause();
+        if (this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS) return;
+        // maybe i should check for existance of active interval 
         if (this.isStopped) {
             super.reset();
             this.isStopped = false;

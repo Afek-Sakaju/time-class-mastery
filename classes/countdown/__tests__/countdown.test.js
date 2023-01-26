@@ -86,7 +86,7 @@ describe('Countdown class tests', () => {
             [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:10', '01:29:55'],
             [{ hours: 100, minutes: 0, seconds: 5 }, '23:59:59', '23:59:44'],
         ])(
-            'countdown of %s units, activating start method, after 15 seconds returns %s',
+            'countdown of %s units, using start method, after 15 seconds returns %s',
             (params, current, result) => {
                 const countdown = new Countdown(params);
                 countdown.start(tempCallBack);
@@ -104,7 +104,7 @@ describe('Countdown class tests', () => {
             [{ hours: 0, minutes: 0, seconds: 45 }, '00:00:45', '00:00:35'],
             [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:10', '01:30:00'],
         ])(
-            'countdown of %s units, starting countdown, after 10 seconds activating pause, returns %s',
+            'countdown of %s units, starting countdown, after 10 seconds using pause, returns %s',
             (params, current, result) => {
                 const countdown = new Countdown(params);
                 countdown.start(tempCallBack);
@@ -128,7 +128,7 @@ describe('Countdown class tests', () => {
             [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:10', '01:30:00'],
             [{ hours: 80, minutes: 80, seconds: 80 }, '23:59:59', '23:59:49'],
         ])(
-            'countdown of %s units, starting countdown, after 10 seconds, activating pause method and start again, then returns %s',
+            'countdown of %s units, starting countdown, after 10 seconds, using pause method and start again, then returns %s',
             (params, current, result) => {
                 const countdown = new Countdown(params);
                 countdown.start(tempCallBack);
@@ -152,7 +152,7 @@ describe('Countdown class tests', () => {
             [{ hours: 0, minutes: 0, seconds: 45 }, '00:00:45', '00:00:45'],
             [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:10', '01:30:10'],
         ])(
-            'countdown of %s units, starting countdown, after 20 seconds activating resetCountdown, returns %s',
+            'countdown of %s units, starting countdown, after 20 seconds using resetCountdown, returns %s',
             (params, current, result) => {
                 const countdown = new Countdown(params);
                 countdown.start(tempCallBack);
@@ -171,7 +171,7 @@ describe('Countdown class tests', () => {
             [{ hours: 0, minutes: 0, seconds: 45 }, '00:00:45', '00:00:35'],
             [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:10', '01:30:00'],
         ])(
-            'countdown of %s units, starting countdown, after 10 seconds activating stop, returns %s',
+            'countdown of %s units, starting countdown, after 10 seconds using stop, returns %s',
             (params, current, result) => {
                 const countdown = new Countdown(params);
                 countdown.start(tempCallBack);
@@ -194,7 +194,7 @@ describe('Countdown class tests', () => {
             [{ hours: 0, minutes: 0, seconds: 45 }, '00:00:45'],
             [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:10'],
         ])(
-            'countdown of %s units, starting countdown, activating stop method and start again, should return reset clock',
+            'countdown of %s units, starting countdown, using stop method and start again, should return zeroed clock',
             (params, current) => {
                 const countdown = new Countdown(params);
                 countdown.start(tempCallBack);
@@ -264,8 +264,4 @@ describe('Countdown class tests', () => {
             countdown.seconds = ['a', 'b', 'c'];
         }).toThrow(Error('Time element must be a valid number'));
     });
-
-    describe('countdown max seconds validation tests', () => {});
-    // plan if the text are correct and how to write them
-    // before starting writing them
 });
