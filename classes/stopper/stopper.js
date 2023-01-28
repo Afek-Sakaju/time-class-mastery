@@ -2,18 +2,28 @@ const Time = require('../time/time');
 
 class Stopper extends Time {
     static MAX_STOPPER_SECONDS = 86399; // 23:59:59
+    static MIN_STOPPER_SECONDS = 0; // 00:00:00
 
     constructor(autoStart = false) {
-        super({ seconds, minutes, hours });
+        super();
 
         this.interval = null;
         this.isStopped = false;
+        this.tSeconds = 0;
 
         if (autoStart) this.start();
     }
 
+    validateLimiter() {
+        if (this.tSeconds > Stopper.MAX_STOPPER_SECONDS) {
+            this.tSeconds = Stopper.MAX_STOPPER_SECONDS;
+        } else if (this.tSeconds < Stopper.MIN_STOPPER_SECONDS) {
+            this.tSeconds = Stopper.MIN_STOPPER_SECONDS;
+        }
+    }
+
     start() {
-        if (this.interval) return;
+        if (this.tSeconds === Stopper.MAX_STOPPER_SECONDS) return;
         if (this.isStopped) {
             this.reset();
             this.isStopped = false;
@@ -27,12 +37,6 @@ class Stopper extends Time {
 
     pause() {
         clearInterval(this.interval);
-    }
-
-    resetStopper() {
-        // name changed from "reset" to prevent override
-        super.reset();
-        // it isn't forsure neccesary because i can just call reset method...
     }
 
     stop() {
