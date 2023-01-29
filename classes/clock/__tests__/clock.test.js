@@ -50,8 +50,9 @@ describe('Clock class tests', () => {
         expect(clock1.seconds).toBe(11);
 
         clock1.subTime(clock2);
-        /* clock1 is :11:11:11, clock2 is :10:10:10 
-                11:11:11 - 10:10:10 = 01:01:01 (3661 totalSeconds) */
+        /* clock1 - 11:11:11
+        clock2 is - 10:10:10
+        11:11:11 - 10:10:10 = 01:01:01 (3661 totalSeconds) */
         expect(clock1.totalSeconds).toBe(3661);
 
         clock1.resetHours();
@@ -76,13 +77,13 @@ describe('Clock class tests', () => {
         });
 
         test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, '02:00:00', '02:00:15'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, '00:30:00', '00:30:15'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, '00:00:45', '00:01:00'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:10', '01:30:25'],
+            [{ hours: 2, minutes: 0, seconds: 0 }, '02:00:15', '02:00:00'],
+            [{ hours: 0, minutes: 30, seconds: 0 }, '00:30:15', '00:30:00'],
+            [{ hours: 0, minutes: 0, seconds: 45 }, '00:01:00', '00:00:45'],
+            [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:25', '01:30:10'],
         ])(
             'clock of %s units, autoStart set to true by default then after 15 seconds returns %s',
-            (params, current, result) => {
+            (params, result, current) => {
                 const clock = new Clock(params);
                 expect(clock.toString()).toBe(current);
 
@@ -99,7 +100,7 @@ describe('Clock class tests', () => {
             [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:10', '01:30:10'],
         ])(
             'clock of %s units, autoStart set to false then after 15 seconds returns %s',
-            (params, current, result) => {
+            (params, result, current) => {
                 const clock = new Clock(params, false);
                 expect(clock.toString()).toBe(current);
 
@@ -110,14 +111,14 @@ describe('Clock class tests', () => {
         );
 
         test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, '02:00:00', '02:00:20'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, '00:30:00', '00:30:20'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, '00:00:45', '00:01:05'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:10', '01:30:30'],
+            [{ hours: 2, minutes: 0, seconds: 0 }, '02:00:20', '02:00:00'],
+            [{ hours: 0, minutes: 30, seconds: 0 }, '00:30:20', '00:30:00'],
+            [{ hours: 0, minutes: 0, seconds: 45 }, '00:01:05', '00:00:45'],
+            [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:30', '01:30:10'],
             [{ hours: 80, minutes: 80, seconds: 160 }, '23:59:59', '23:59:59'],
         ])(
             'clock of %s units, activates start method then after 20 seconds returns %s',
-            (params, current, result) => {
+            (params, result, current) => {
                 const clock = new Clock(params, false);
                 expect(clock.toString()).toBe(current);
 
@@ -143,13 +144,13 @@ describe('Clock class tests', () => {
         });
 
         test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, '02:00:00', '02:00:10'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, '00:30:00', '00:30:10'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, '00:00:45', '00:00:55'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:10', '01:30:20'],
+            [{ hours: 2, minutes: 0, seconds: 0 }, '02:00:10', '02:00:00'],
+            [{ hours: 0, minutes: 30, seconds: 0 }, '00:30:10', '00:30:00'],
+            [{ hours: 0, minutes: 0, seconds: 45 }, '00:00:55', '00:00:45'],
+            [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:20', '01:30:10'],
         ])(
             'clock of %s units, start method active, after 10 seconds using pause method returns %s',
-            (params, current, result) => {
+            (params, result, current) => {
                 const clock = new Clock(params);
                 expect(clock.toString()).toBe(current);
 
@@ -160,7 +161,29 @@ describe('Clock class tests', () => {
             }
         );
 
-        // TODO TESTS RESET()
+        test.each([
+            [{ hours: 2, minutes: 0, seconds: 0 }, '00:00:00', '02:00:00'],
+            [{ hours: 0, minutes: 30, seconds: 0 }, '00:00:00', '00:30:00'],
+            [{ hours: 0, minutes: 0, seconds: 45 }, '00:00:00', '00:00:45'],
+            [{ hours: 1, minutes: 30, seconds: 10 }, '00:00:00', '01:30:10'],
+        ])(
+            'clock of %s units, start method active, after 10 seconds using reset method, then returns %s',
+            (params, result, current) => {
+                const clock = new Clock(params);
+                expect(clock.toString()).toBe(current);
+
+                setTimeout(() => {
+                    clock.reset();
+                    expect(clock.toString()).toBe(result);
+
+                    setTimeout(() => {
+                        /* this timeout added to make sure that reset method 
+                        doesn't stop the clock's interval */
+                        expect(clock.toString()).toBe('00:00:01');
+                    }, 1000);
+                }, 10000);
+            }
+        );
     });
 
     test('invalid cases - inheritance of parameter validation', () => {

@@ -42,8 +42,7 @@ class Countdown extends Time {
         clearInterval(this.interval);
     }
 
-    resetCountdown() {
-        // name changed from "reset" to prevent override
+    reset() {
         this.tSeconds = this.initialSeconds;
     }
 

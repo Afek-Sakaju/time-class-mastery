@@ -3,7 +3,7 @@ const Stopper = require('../stopper');
 describe('Stopper class tests', () => {
     test('inheretance tests', () => {
         const stopper1 = new Stopper();
-        /* not sure if neccessary, ill ask hadriel's opinion
+
         stopper1.addSeconds(5);
         expect(stopper1.seconds).toBe(5);
 
@@ -19,11 +19,20 @@ describe('Stopper class tests', () => {
         stopper1.reset();
         expect(stopper1.totalSeconds).toBe(0);
 
-        const stopper2 = new Stopper({
-            seconds: 10,
-            minutes: 10,
-            hours: 10,
-        }); // 10:10:10
+        const stopper2 = new Stopper();
+        stopper2.addHours(10);
+        stopper2.addMinutes(10);
+        stopper2.addSeconds(10);
+        // stopper2 - 10:10:10
+
+        stopper1.addTime(stopper2);
+        /* the test written the first time to make sure the addTime method works
+        the second time i called addTime just to make sure i can test "stopper1" 
+        well, because he was reseted after subTime */
+        expect(stopper1.totalSeconds).toBe(stopper2.totalSeconds);
+
+        stopper1.subTime(stopper2);
+        expect(stopper1.totalSeconds).toBe(0);
 
         stopper1.addTime(stopper2);
         expect(stopper1.totalSeconds).toBe(stopper2.totalSeconds);
@@ -38,7 +47,7 @@ describe('Stopper class tests', () => {
         expect(stopper1.hours).toBe(7);
 
         stopper1.subHours(200);
-        expect(stopper1.totalSeconds).toBe(stopper.MIN_STOPPER_SECONDS);
+        expect(stopper1.totalSeconds).toBe(Stopper.MIN_STOPPER_SECONDS);
 
         stopper1.hours = 11;
         expect(stopper1.hours).toBe(11);
@@ -50,8 +59,9 @@ describe('Stopper class tests', () => {
         expect(stopper1.seconds).toBe(11);
 
         stopper1.subTime(stopper2);
-        // stopper1 is :11:11:11, stopper2 is :10:10:10 
-        // 11:11:11 - 10:10:10 = 01:01:01 (3661 totalSeconds) 
+        /* stopper1 - 11:11:11
+        stopper2 is - 10:10:10
+        11:11:11 - 10:10:10 = 01:01:01 (3661 totalSeconds) */
         expect(stopper1.totalSeconds).toBe(3661);
 
         stopper1.resetHours();
@@ -62,7 +72,7 @@ describe('Stopper class tests', () => {
 
         stopper1.resetSeconds();
         expect(stopper1.seconds).toBe(0);
-     */
+
         expect(stopper1.toString()).toBe('00:00:00');
     });
 
