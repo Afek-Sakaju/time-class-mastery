@@ -67,8 +67,10 @@ describe('Countdown class tests', () => {
     });
 
     describe('start & pause & stop & reset methods tests', () => {
-        const tempCallBack = () => {
-            let i = 0;
+        let bool = false;
+
+        const testCallBack = () => {
+            bool = true;
         };
 
         beforeAll(() => {
@@ -77,6 +79,20 @@ describe('Countdown class tests', () => {
 
         afterEach(() => {
             jest.runAllTimers();
+        });
+
+        test('callback activation after countdown has been finished', () => {
+            /* This test should stay the first test after initializing "bool"
+            because thats how we make sure he isn't modified by other tests 
+            that activated the callback */
+            const countdown = new Countdown({ seconds: 10 });
+            countdown.start(testCallBack);
+            expect(countdown.toString()).toBe('00:00:10');
+
+            setTimeout(() => {
+                expect(countdown.toString()).toBe('00:00:00');
+                expect(bool).toBeTruthy();
+            }, 11000);
         });
 
         test.each([
@@ -89,7 +105,7 @@ describe('Countdown class tests', () => {
             'countdown of %j units, using start method, after 15 seconds returns %s',
             (params, result, current) => {
                 const countdown = new Countdown(params);
-                countdown.start(tempCallBack);
+                countdown.start(testCallBack);
                 expect(countdown.toString()).toBe(current);
 
                 setTimeout(() => {
@@ -107,7 +123,7 @@ describe('Countdown class tests', () => {
             'countdown of %s units starts countdown, after 10 seconds using pause, returns %s',
             (params, result, current) => {
                 const countdown = new Countdown(params);
-                countdown.start(tempCallBack);
+                countdown.start(testCallBack);
                 expect(countdown.toString()).toBe(current);
 
                 setTimeout(() => {
@@ -131,7 +147,7 @@ describe('Countdown class tests', () => {
             'countdown of %s units starts countdown, after 10 seconds, using pause method and start again, then returns %s',
             (params, result, current) => {
                 const countdown = new Countdown(params);
-                countdown.start(tempCallBack);
+                countdown.start(testCallBack);
                 expect(countdown.toString()).toBe(current);
 
                 setTimeout(() => {
@@ -140,7 +156,7 @@ describe('Countdown class tests', () => {
 
                 setTimeout(() => {
                     // to make sure the stop method indeed stopped the interval
-                    countdown.start(tempCallBack);
+                    countdown.start(testCallBack);
                     expect(countdown.toString()).toBe(result);
                 }, 15000);
             }
@@ -155,7 +171,7 @@ describe('Countdown class tests', () => {
             'countdown of %s units starts countdown, after 20 seconds using reset, returns %s',
             (params, result, current) => {
                 const countdown = new Countdown(params);
-                countdown.start(tempCallBack);
+                countdown.start(testCallBack);
                 expect(countdown.toString()).toBe(current);
 
                 setTimeout(() => {
@@ -174,7 +190,7 @@ describe('Countdown class tests', () => {
             'countdown of %s units starts countdown, after 10 seconds using stop, returns %s',
             (params, result, current) => {
                 const countdown = new Countdown(params);
-                countdown.start(tempCallBack);
+                countdown.start(testCallBack);
                 expect(countdown.toString()).toBe(current);
 
                 setTimeout(() => {
@@ -197,7 +213,7 @@ describe('Countdown class tests', () => {
             'countdown of %s units starts countdown, using stop method and start again, should return "00:00:00',
             (params, current) => {
                 const countdown = new Countdown(params);
-                countdown.start(tempCallBack);
+                countdown.start(testCallBack);
                 expect(countdown.toString()).toBe(current);
 
                 setTimeout(() => {
@@ -206,7 +222,7 @@ describe('Countdown class tests', () => {
 
                 setTimeout(() => {
                     // to make sure the stop method indeed stopped the interval
-                    countdown.start(tempCallBack);
+                    countdown.start(testCallBack);
                     expect(countdown.toString()).toBe('00:00:00');
                 }, 11000);
             }
@@ -218,7 +234,7 @@ describe('Countdown class tests', () => {
                 minutes: 0,
                 hours: 0,
             });
-            countdown.start(tempCallBack);
+            countdown.start(testCallBack);
             const maxLimit = '00:00:00';
 
             setTimeout(() => {
