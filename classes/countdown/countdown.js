@@ -8,7 +8,7 @@ class Countdown extends Time {
         super({ seconds, minutes, hours });
 
         this.initialSeconds = null;
-        this.interval = null;
+        this.intervalId = null;
         this.isStopped = false;
     }
 
@@ -22,14 +22,14 @@ class Countdown extends Time {
 
     start(callBack) {
         if (this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS) return;
-        // maybe i should check for existance of active interval 
+        // maybe i should check for existance of active interval
         if (this.isStopped) {
             super.reset();
             this.isStopped = false;
         }
 
         this.initialSeconds = this.tSeconds;
-        this.interval = setInterval(() => {
+        this.intervalId = setInterval(() => {
             super.subSeconds(1);
             if (this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS) {
                 callBack();
@@ -39,7 +39,7 @@ class Countdown extends Time {
     }
 
     pause() {
-        clearInterval(this.interval);
+        clearInterval(this.intervalId);
     }
 
     reset() {

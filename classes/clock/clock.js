@@ -10,7 +10,7 @@ class Clock extends Time {
     ) {
         super({ seconds, minutes, hours });
 
-        this.interval = null;
+        this.intervalId = null;
 
         if (autoStart) this.start();
     }
@@ -26,14 +26,14 @@ class Clock extends Time {
     start() {
         // maybe i should check for existance of active interval
 
-        this.interval = setInterval(() => {
+        this.intervalId = setInterval(() => {
             if (this.tSeconds === Clock.MAX_CLOCK_SECONDS) this.pause();
             super.addSeconds(1);
         }, 1000);
     }
 
     pause() {
-        clearInterval(this.interval);
+        clearInterval(this.intervalId);
     }
 }
 

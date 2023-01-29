@@ -7,7 +7,7 @@ class Stopper extends Time {
     constructor(autoStart = false) {
         super();
 
-        this.interval = null;
+        this.intervalId = null;
         this.isStopped = false;
         this.tSeconds = 0;
 
@@ -29,14 +29,14 @@ class Stopper extends Time {
             this.isStopped = false;
         }
 
-        this.interval = setInterval(() => {
+        this.intervalId = setInterval(() => {
             super.addSeconds(1);
             if (this.tSeconds === Stopper.MAX_STOPPER_SECONDS) this.pause();
         }, 1000);
     }
 
     pause() {
-        clearInterval(this.interval);
+        clearInterval(this.intervalId);
     }
 
     stop() {
