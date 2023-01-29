@@ -1,7 +1,7 @@
 const Time = require('../time/time');
 
 class Countdown extends Time {
-    static MAX_COUNTDOWN_SECONDS = 86399; // 23:59:59
+    static MAX_COUNTDOWN_SECONDS = 359999; // 23:59:59
     static MIN_COUNTDOWN_SECONDS = 0; // 00:00:00
 
     constructor({ seconds = null, minutes = null, hours = null } = {}) {

@@ -78,7 +78,10 @@ describe('Countdown class tests', () => {
         });
 
         afterEach(() => {
-            jest.runAllTimers();
+            jest.runOnlyPendingTimers();
+            /* jest had bug with running some of the tests.
+            the solution here was to change the function 
+            "jest.runAllTimers()" to "jest.runOnlyPendingTimers()" */
         });
 
         test('callback activation after countdown has been finished', () => {
@@ -100,16 +103,17 @@ describe('Countdown class tests', () => {
             [{ hours: 0, minutes: 30, seconds: 0 }, '00:29:45', '00:30:00'],
             [{ hours: 0, minutes: 0, seconds: 45 }, '00:00:30', '00:00:45'],
             [{ hours: 1, minutes: 30, seconds: 10 }, '01:29:55', '01:30:10'],
-            [{ hours: 100, minutes: 0, seconds: 5 }, '23:59:44', '23:59:59'],
+            [{ hours: 100, minutes: 0, seconds: 5 }, '99:59:44', '99:59:59'],
         ])(
-            'countdown of %j units, using start method, after 15 seconds returns %s',
+            'countdown of %s units, using start method, after 15 seconds returns %s',
             (params, result, current) => {
                 const countdown = new Countdown(params);
                 countdown.start(testCallBack);
                 expect(countdown.toString()).toBe(current);
 
                 setTimeout(() => {
-                    expect(countdown.toString()).toBe(result);
+                    const res = countdown.toString();
+                    expect(res).toBe(result);
                 }, 15000);
             }
         );
@@ -142,7 +146,7 @@ describe('Countdown class tests', () => {
             [{ hours: 0, minutes: 30, seconds: 0 }, '00:29:50', '00:30:00'],
             [{ hours: 0, minutes: 0, seconds: 45 }, '00:00:35', '00:00:45'],
             [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:00', '01:30:10'],
-            [{ hours: 80, minutes: 80, seconds: 80 }, '23:59:49', '23:59:59'],
+            [{ hours: 99, minutes: 80, seconds: 80 }, '99:59:49', '99:59:59'],
         ])(
             'countdown of %s units starts countdown, after 10 seconds, using pause method and start again, then returns %s',
             (params, result, current) => {
