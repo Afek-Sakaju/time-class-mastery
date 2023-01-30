@@ -102,10 +102,10 @@ describe('Countdown class tests', () => {
 
         test.each([
             [{ hours: 2, minutes: 0, seconds: 0 }, 15, '01:59:45', '02:00:00'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, 15, '00:29:45', '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, 15, '00:00:30', '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, 15, '01:29:55', '01:30:10'],
-            [{ hours: 100, minutes: 0, seconds: 5 }, 15, '99:59:44', '99:59:59'],
+            [{ hours: 0, minutes: 30, seconds: 0 }, 20, '00:29:40', '00:30:00'],
+            [{ hours: 0, minutes: 0, seconds: 45 }, 30, '00:00:15', '00:00:45'],
+            [{ hours: 1, minutes: 30, seconds: 10 }, 3600, '00:30:10', '01:30:10'],
+            [{ hours: 100, minutes: 0, seconds: 5 }, 59, '99:59:00', '99:59:59'],
         ])(
             'countdown of %s units, using start method, after %s seconds returns %s',
             (params, timeoutSeconds, result, current) => {
@@ -121,10 +121,10 @@ describe('Countdown class tests', () => {
         );
 
         test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, 10, '01:59:50', '02:00:00'],
+            [{ hours: 2, minutes: 0, seconds: 0 }, 120, '01:58:00', '02:00:00'],
             [{ hours: 0, minutes: 30, seconds: 0 }, 10, '00:29:50', '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, 10, '00:00:35', '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, 10, '01:30:00', '01:30:10'],
+            [{ hours: 0, minutes: 0, seconds: 45 }, 0, '00:00:45', '00:00:45'],
+            [{ hours: 1, minutes: 30, seconds: 10 }, 999999, '00:00:00', '01:30:10'],
         ])(
             'countdown of %s units starts countdown, after %s seconds using pause, returns %s',
             (params, timeoutSeconds, result, current) => {
@@ -144,11 +144,11 @@ describe('Countdown class tests', () => {
         );
 
         test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, 10, '01:59:50', '02:00:00'],
+            [{ hours: 2, minutes: 0, seconds: 0 }, 20, '01:59:40', '02:00:00'],
             [{ hours: 0, minutes: 30, seconds: 0 }, 10, '00:29:50', '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, 10, '00:00:35', '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, 10, '01:30:00', '01:30:10'],
-            [{ hours: 99, minutes: 80, seconds: 80 }, 10, '99:59:49', '99:59:59'],
+            [{ hours: 0, minutes: 0, seconds: 45 }, 45, '00:00:00', '00:00:45'],
+            [{ hours: 1, minutes: 30, seconds: 10 }, 60, '01:29:10', '01:30:10'],
+            [{ hours: 99, minutes: 80, seconds: 80 }, 1, '99:59:58', '99:59:59'],
         ])(
             'countdown of %s units starts countdown, after %s seconds, using pause method and start again, then returns %s',
             (params, timeoutSeconds, result, current) => {
@@ -170,9 +170,9 @@ describe('Countdown class tests', () => {
 
         test.each([
             [{ hours: 2, minutes: 0, seconds: 0 }, 20, '02:00:00', '02:00:00'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, 20, '00:30:00', '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, 20, '00:00:45', '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, 20, '01:30:10', '01:30:10'],
+            [{ hours: 0, minutes: 30, seconds: 0 }, 40, '00:30:00', '00:30:00'],
+            [{ hours: 0, minutes: 0, seconds: 45 }, 99999, '00:00:45', '00:00:45'],
+            [{ hours: 1, minutes: 30, seconds: 10 }, 3600, '01:30:10', '01:30:10'],
         ])(
             'countdown of %s units starts countdown, after %s seconds using reset, returns %s',
             (params, timeoutSeconds, result, current) => {
@@ -189,9 +189,9 @@ describe('Countdown class tests', () => {
 
         test.each([
             [{ hours: 2, minutes: 0, seconds: 0 }, 10, '01:59:50', '02:00:00'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, 10, '00:29:50', '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, 10, '00:00:35', '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, 10, '01:30:00', '01:30:10'],
+            [{ hours: 0, minutes: 30, seconds: 0 }, 20, '00:29:40', '00:30:00'],
+            [{ hours: 0, minutes: 0, seconds: 45 }, 300, '00:00:00', '00:00:45'],
+            [{ hours: 1, minutes: 30, seconds: 10 }, 3600, '00:30:10', '01:30:10'],
         ])(
             'countdown of %s units starts countdown, after %s seconds using stop, returns %s',
             (params, timeoutSeconds, result, current) => {
@@ -211,12 +211,12 @@ describe('Countdown class tests', () => {
         );
 
         test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, 10, '02:00:00'],
+            [{ hours: 2, minutes: 0, seconds: 0 }, 100, '02:00:00'],
             [{ hours: 0, minutes: 30, seconds: 0 }, 10, '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, 10, '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, 10, '01:30:10'],
+            [{ hours: 0, minutes: 0, seconds: 45 }, 40, '00:00:45'],
+            [{ hours: 1, minutes: 30, seconds: 10 }, 300, '01:30:10'],
         ])(
-            'countdown of %s units starts countdown for %s seconds then stop and start again, should return "00:00:00',
+            'countdown of %s units starts countdown for %s seconds, then stop and start again, should return "00:00:00"',
             (params, timeoutSeconds, current) => {
                 const countdown = new Countdown(params);
                 countdown.start(testCallBack);
