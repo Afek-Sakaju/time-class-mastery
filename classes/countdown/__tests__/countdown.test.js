@@ -89,24 +89,26 @@ describe('Countdown class tests', () => {
             because thats how we make sure he isn't modified by other tests 
             that activated the callback */
             const countdown = new Countdown({ seconds: 10 });
+            const timeoutSeconds = 11;
+
             countdown.start(testCallBack);
             expect(countdown.toString()).toBe('00:00:10');
 
             setTimeout(() => {
                 expect(countdown.toString()).toBe('00:00:00');
                 expect(bool).toBeTruthy();
-            }, 11000);
+            }, timeoutSeconds * 1000);
         });
 
         test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, '01:59:45', '02:00:00'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, '00:29:45', '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, '00:00:30', '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, '01:29:55', '01:30:10'],
-            [{ hours: 100, minutes: 0, seconds: 5 }, '99:59:44', '99:59:59'],
+            [{ hours: 2, minutes: 0, seconds: 0 }, 15, '01:59:45', '02:00:00'],
+            [{ hours: 0, minutes: 30, seconds: 0 }, 15, '00:29:45', '00:30:00'],
+            [{ hours: 0, minutes: 0, seconds: 45 }, 15, '00:00:30', '00:00:45'],
+            [{ hours: 1, minutes: 30, seconds: 10 }, 15, '01:29:55', '01:30:10'],
+            [{ hours: 100, minutes: 0, seconds: 5 }, 15, '99:59:44', '99:59:59'],
         ])(
-            'countdown of %s units, using start method, after 15 seconds returns %s',
-            (params, result, current) => {
+            'countdown of %s units, using start method, after %s seconds returns %s',
+            (params, timeoutSeconds, result, current) => {
                 const countdown = new Countdown(params);
                 countdown.start(testCallBack);
                 expect(countdown.toString()).toBe(current);
@@ -114,66 +116,66 @@ describe('Countdown class tests', () => {
                 setTimeout(() => {
                     const res = countdown.toString();
                     expect(res).toBe(result);
-                }, 15000);
+                }, 1000 * timeoutSeconds);
             }
         );
 
         test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, '01:59:50', '02:00:00'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, '00:29:50', '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, '00:00:35', '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:00', '01:30:10'],
+            [{ hours: 2, minutes: 0, seconds: 0 }, 10, '01:59:50', '02:00:00'],
+            [{ hours: 0, minutes: 30, seconds: 0 }, 10, '00:29:50', '00:30:00'],
+            [{ hours: 0, minutes: 0, seconds: 45 }, 10, '00:00:35', '00:00:45'],
+            [{ hours: 1, minutes: 30, seconds: 10 }, 10, '01:30:00', '01:30:10'],
         ])(
-            'countdown of %s units starts countdown, after 10 seconds using pause, returns %s',
-            (params, result, current) => {
+            'countdown of %s units starts countdown, after %s seconds using pause, returns %s',
+            (params, timeoutSeconds, result, current) => {
                 const countdown = new Countdown(params);
                 countdown.start(testCallBack);
                 expect(countdown.toString()).toBe(current);
 
                 setTimeout(() => {
                     countdown.pause();
-                }, 10000);
+                }, 1000 * timeoutSeconds);
 
                 setTimeout(() => {
                     // to make sure the pause method indeed stopped the interval
                     expect(countdown.toString()).toBe(result);
-                }, 11000);
+                }, 1000 * timeoutSeconds + 1000);
             }
         );
 
         test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, '01:59:50', '02:00:00'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, '00:29:50', '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, '00:00:35', '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:00', '01:30:10'],
-            [{ hours: 99, minutes: 80, seconds: 80 }, '99:59:49', '99:59:59'],
+            [{ hours: 2, minutes: 0, seconds: 0 }, 10, '01:59:50', '02:00:00'],
+            [{ hours: 0, minutes: 30, seconds: 0 }, 10, '00:29:50', '00:30:00'],
+            [{ hours: 0, minutes: 0, seconds: 45 }, 10, '00:00:35', '00:00:45'],
+            [{ hours: 1, minutes: 30, seconds: 10 }, 10, '01:30:00', '01:30:10'],
+            [{ hours: 99, minutes: 80, seconds: 80 }, 10, '99:59:49', '99:59:59'],
         ])(
-            'countdown of %s units starts countdown, after 10 seconds, using pause method and start again, then returns %s',
-            (params, result, current) => {
+            'countdown of %s units starts countdown, after %s seconds, using pause method and start again, then returns %s',
+            (params, timeoutSeconds, result, current) => {
                 const countdown = new Countdown(params);
                 countdown.start(testCallBack);
                 expect(countdown.toString()).toBe(current);
 
                 setTimeout(() => {
                     countdown.pause();
-                }, 10000);
+                }, 1000 * timeoutSeconds);
 
                 setTimeout(() => {
                     // to make sure the stop method indeed stopped the interval
                     countdown.start(testCallBack);
                     expect(countdown.toString()).toBe(result);
-                }, 15000);
+                }, 1000 * timeoutSeconds + 5000);
             }
         );
 
         test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, '02:00:00', '02:00:00'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, '00:30:00', '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, '00:00:45', '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:10', '01:30:10'],
+            [{ hours: 2, minutes: 0, seconds: 0 }, 20, '02:00:00', '02:00:00'],
+            [{ hours: 0, minutes: 30, seconds: 0 }, 20, '00:30:00', '00:30:00'],
+            [{ hours: 0, minutes: 0, seconds: 45 }, 20, '00:00:45', '00:00:45'],
+            [{ hours: 1, minutes: 30, seconds: 10 }, 20, '01:30:10', '01:30:10'],
         ])(
-            'countdown of %s units starts countdown, after 20 seconds using reset, returns %s',
-            (params, result, current) => {
+            'countdown of %s units starts countdown, after %s seconds using reset, returns %s',
+            (params, timeoutSeconds, result, current) => {
                 const countdown = new Countdown(params);
                 countdown.start(testCallBack);
                 expect(countdown.toString()).toBe(current);
@@ -181,54 +183,54 @@ describe('Countdown class tests', () => {
                 setTimeout(() => {
                     countdown.reset();
                     expect(countdown.toString()).toBe(result);
-                }, 20000);
+                }, timeoutSeconds * 1000);
             }
         );
 
         test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, '01:59:50', '02:00:00'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, '00:29:50', '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, '00:00:35', '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:00', '01:30:10'],
+            [{ hours: 2, minutes: 0, seconds: 0 }, 10, '01:59:50', '02:00:00'],
+            [{ hours: 0, minutes: 30, seconds: 0 }, 10, '00:29:50', '00:30:00'],
+            [{ hours: 0, minutes: 0, seconds: 45 }, 10, '00:00:35', '00:00:45'],
+            [{ hours: 1, minutes: 30, seconds: 10 }, 10, '01:30:00', '01:30:10'],
         ])(
-            'countdown of %s units starts countdown, after 10 seconds using stop, returns %s',
-            (params, result, current) => {
+            'countdown of %s units starts countdown, after %s seconds using stop, returns %s',
+            (params, timeoutSeconds, result, current) => {
                 const countdown = new Countdown(params);
                 countdown.start(testCallBack);
                 expect(countdown.toString()).toBe(current);
 
                 setTimeout(() => {
                     countdown.stop();
-                }, 10000);
+                }, timeoutSeconds * 1000);
 
                 setTimeout(() => {
                     // to make sure the stop method indeed stopped the interval
                     expect(countdown.toString()).toBe(result);
-                }, 11000);
+                }, timeoutSeconds * 1000 + 1000);
             }
         );
 
         test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, '02:00:00'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, '01:30:10'],
+            [{ hours: 2, minutes: 0, seconds: 0 }, 10, '02:00:00'],
+            [{ hours: 0, minutes: 30, seconds: 0 }, 10, '00:30:00'],
+            [{ hours: 0, minutes: 0, seconds: 45 }, 10, '00:00:45'],
+            [{ hours: 1, minutes: 30, seconds: 10 }, 10, '01:30:10'],
         ])(
-            'countdown of %s units starts countdown, using stop method and start again, should return "00:00:00',
-            (params, current) => {
+            'countdown of %s units starts countdown for %s seconds then stop and start again, should return "00:00:00',
+            (params, timeoutSeconds, current) => {
                 const countdown = new Countdown(params);
                 countdown.start(testCallBack);
                 expect(countdown.toString()).toBe(current);
 
                 setTimeout(() => {
                     countdown.stop();
-                }, 10000);
+                }, timeoutSeconds * 1000);
 
                 setTimeout(() => {
                     // to make sure the stop method indeed stopped the interval
                     countdown.start(testCallBack);
                     expect(countdown.toString()).toBe('00:00:00');
-                }, 11000);
+                }, timeoutSeconds * 1000 + 1000);
             }
         );
 
@@ -238,12 +240,13 @@ describe('Countdown class tests', () => {
                 minutes: 0,
                 hours: 0,
             });
-            countdown.start(testCallBack);
+            const timeoutSeconds = 60;
             const maxLimit = '00:00:00';
+            countdown.start(testCallBack);
 
             setTimeout(() => {
                 expect(countdown.toString()).toBe(maxLimit);
-            }, 60000);
+            }, timeoutSeconds * 1000);
         });
     });
 
