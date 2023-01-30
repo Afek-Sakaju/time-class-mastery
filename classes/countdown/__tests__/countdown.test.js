@@ -134,12 +134,12 @@ describe('Countdown class tests', () => {
 
                 setTimeout(() => {
                     countdown.pause();
-                }, 1000 * timeoutSeconds);
 
-                setTimeout(() => {
-                    // to make sure the pause method indeed stopped the interval
-                    expect(countdown.toString()).toBe(result);
-                }, 1000 * timeoutSeconds + 1000);
+                    setTimeout(() => {
+                        // to make sure the pause method indeed stopped the interval
+                        expect(countdown.toString()).toBe(result);
+                    }, 2000);
+                }, 1000 * timeoutSeconds);
             }
         );
 
@@ -158,13 +158,13 @@ describe('Countdown class tests', () => {
 
                 setTimeout(() => {
                     countdown.pause();
-                }, 1000 * timeoutSeconds);
 
-                setTimeout(() => {
-                    // to make sure the stop method indeed stopped the interval
-                    countdown.start(testCallBack);
-                    expect(countdown.toString()).toBe(result);
-                }, 1000 * timeoutSeconds + 5000);
+                    setTimeout(() => {
+                        // to make sure the stop method indeed stopped the interval
+                        countdown.start(testCallBack);
+                        expect(countdown.toString()).toBe(result);
+                    }, 2000);
+                }, 1000 * timeoutSeconds);
             }
         );
 
@@ -201,12 +201,12 @@ describe('Countdown class tests', () => {
 
                 setTimeout(() => {
                     countdown.stop();
-                }, timeoutSeconds * 1000);
 
-                setTimeout(() => {
-                    // to make sure the stop method indeed stopped the interval
-                    expect(countdown.toString()).toBe(result);
-                }, timeoutSeconds * 1000 + 1000);
+                    setTimeout(() => {
+                        // to make sure the stop method indeed stopped the interval
+                        expect(countdown.toString()).toBe(result);
+                    }, 2000);
+                }, timeoutSeconds * 1000);
             }
         );
 
@@ -224,13 +224,13 @@ describe('Countdown class tests', () => {
 
                 setTimeout(() => {
                     countdown.stop();
-                }, timeoutSeconds * 1000);
 
-                setTimeout(() => {
-                    // to make sure the stop method indeed stopped the interval
-                    countdown.start(testCallBack);
-                    expect(countdown.toString()).toBe('00:00:00');
-                }, timeoutSeconds * 1000 + 1000);
+                    setTimeout(() => {
+                        // to make sure the stop method indeed stopped the interval
+                        countdown.start(testCallBack);
+                        expect(countdown.toString()).toBe('00:00:00');
+                    }, 2000);
+                }, timeoutSeconds * 1000);
             }
         );
 
