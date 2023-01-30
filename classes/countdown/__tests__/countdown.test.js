@@ -258,7 +258,15 @@ describe('Countdown class tests', () => {
         });
 
         expect(() => {
-            new Countdown({ hours: 'bob', minutes: { a: 'a' }, seconds: [6] });
+            new Countdown({ hours: 'bob', minutes: 5, seconds: 10 });
+        }).toThrow(Error('Time element must be a valid number'));
+
+        expect(() => {
+            new Countdown({ hours: 5, minutes: { a: 'a' }, seconds: 10 });
+        }).toThrow(Error('Time element must be a valid number'));
+
+        expect(() => {
+            new Countdown({ hours: 5, minutes: 10, seconds: [1, 1, 1] });
         }).toThrow(Error('Time element must be a valid number'));
 
         expect(() => {

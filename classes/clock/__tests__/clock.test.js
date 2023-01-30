@@ -13,8 +13,8 @@ describe('Clock class tests', () => {
         clock1.addHours(3);
         expect(clock1.hours).toBe(3);
 
-        clock1.addHours(100);
-        expect(clock1.totalSeconds).toBe(Clock.MAX_CLOCK_SECONDS);
+        clock1.addHours(21);
+        expect(clock1.hours).toBe(0); // clock reset after "23:59:59"
 
         clock1.reset();
         expect(clock1.totalSeconds).toBe(0);
@@ -99,7 +99,7 @@ describe('Clock class tests', () => {
         test.each([
             [{ hours: 2, minutes: 0, seconds: 0 }, 15, '02:00:00', '02:00:00'],
             [{ hours: 0, minutes: 30, seconds: 0 }, 150, '00:30:00', '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, 999999, '00:00:45', '00:00:45'],
+            [{ hours: 0, minutes: 0, seconds: 45 }, 9999, '00:00:45', '00:00:45'],
             [{ hours: 1, minutes: 30, seconds: 10 }, 100, '01:30:10', '01:30:10'],
         ])(
             'clock of %s units, autoStart set to false then after %s seconds returns %s',
@@ -118,7 +118,7 @@ describe('Clock class tests', () => {
             [{ hours: 0, minutes: 30, seconds: 0 }, 40, '00:30:40', '00:30:00'],
             [{ hours: 0, minutes: 0, seconds: 45 }, 3600, '01:00:45', '00:00:45'],
             [{ hours: 1, minutes: 30, seconds: 10 }, 120, '01:32:10', '01:30:10'],
-            [{ hours: 80, minutes: 80, seconds: 160 }, 20, '23:59:59', '23:59:59'],
+            [{ hours: 26, minutes: 0, seconds: 0 }, 20, '02:00:20', '02:00:00'],
         ])(
             'clock of %s units, activates start method then after %s seconds returns %s',
             (params, timeoutSeconds, result, current) => {
@@ -133,14 +133,14 @@ describe('Clock class tests', () => {
             }
         );
 
-        test('clock: 23:59:50 auto pauses after reaching "23:59:59"', () => {
+        test('clock: 23:59:50 resets and continue to count after reaching "23:59:59"', () => {
             const clock = new Clock({
                 seconds: 50,
                 minutes: 59,
                 hours: 23,
             });
-            const timeoutSeconds = 30;
-            const maxLimit = '23:59:59';
+            const timeoutSeconds = 15;
+            const maxLimit = '00:00:05';
 
             setTimeout(() => {
                 expect(clock.toString()).toBe(maxLimit);
@@ -194,7 +194,15 @@ describe('Clock class tests', () => {
         const clock = new Clock({ hours: 10, minutes: 15, seconds: 20 });
 
         expect(() => {
-            new Clock({ hours: 'bob', minutes: { a: 'a' }, seconds: [6] });
+            new Clock({ hours: 'bob', minutes: 5, seconds: 10 });
+        }).toThrow(Error('Time element must be a valid number'));
+
+        expect(() => {
+            new Clock({ hours: 5, minutes: { a: 'a' }, seconds: 10 });
+        }).toThrow(Error('Time element must be a valid number'));
+
+        expect(() => {
+            new Clock({ hours: 5, minutes: 10, seconds: [1, 1, 1] });
         }).toThrow(Error('Time element must be a valid number'));
 
         expect(() => {
