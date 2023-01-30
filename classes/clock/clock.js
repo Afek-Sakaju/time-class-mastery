@@ -32,6 +32,22 @@ class Clock extends Time {
     pause() {
         clearInterval(this.intervalId);
     }
+
+    gt(clock) {
+        return this.tSeconds > clock.totalSeconds || false;
+    }
+
+    gte(clock) {
+        return this.tSeconds >= clock.totalSeconds || false;
+    }
+
+    lt(clock) {
+        return this.tSeconds < clock.totalSeconds || false;
+    }
+
+    lte(clock) {
+        return this.tSeconds <= clock.totalSeconds || false;
+    }
 }
 
 module.exports = Clock;
