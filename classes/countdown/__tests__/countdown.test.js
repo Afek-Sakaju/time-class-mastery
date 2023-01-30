@@ -66,6 +66,15 @@ describe('Countdown class tests', () => {
         expect(countdown1.toString()).toBe('01:01:01');
     });
 
+    test('countdown creation with no params test, should be same as current time', () => {
+        const countdown = new Countdown();
+        const currentDate = new Date();
+
+        expect(currentDate.getHours()).toBe(countdown.hours);
+        expect(currentDate.getMinutes()).toBe(countdown.minutes);
+        expect(currentDate.getSeconds()).toBe(countdown.seconds);
+    });
+
     describe('start & pause & stop & reset methods tests', () => {
         let bool = false;
 

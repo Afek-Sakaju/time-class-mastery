@@ -67,6 +67,15 @@ describe('Clock class tests', () => {
         expect(clock1.toString()).toBe('00:00:00');
     });
 
+    test('clock creation with no params test, should be same as current time', () => {
+        const clock = new Clock();
+        const currentDate = new Date();
+
+        expect(currentDate.getHours()).toBe(clock.hours);
+        expect(currentDate.getMinutes()).toBe(clock.minutes);
+        expect(currentDate.getSeconds()).toBe(clock.seconds);
+    });
+
     describe('start & pause methods tests', () => {
         beforeAll(() => {
             jest.useFakeTimers();

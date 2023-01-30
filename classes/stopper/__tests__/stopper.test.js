@@ -159,12 +159,11 @@ describe('Stopper class tests', () => {
             }
         );
 
-        //[3600, 5, '01:00:05'],
-        //[5, 5, '00:00:10'],
-
         test.each([
             [70, 5, '00:01:15'],
             [10, 5, '00:00:15'],
+            [3600, 5, '01:00:05'],
+            [5, 5, '00:00:10'],
         ])(
             'stopper started counting, after %s seconds using pause method then start again for another %s seconds, returns %s',
             (timeoutSeconds1, timeoutSeconds2, result) => {
@@ -208,7 +207,7 @@ describe('Stopper class tests', () => {
             [10, '00:00:10'],
             [3600, '01:00:00'],
             [100, '00:01:40'],
-            [1000000, '23:59:59'],
+            [Stopper.MAX_STOPPER_SECONDS + 5, '23:59:59'],
         ])(
             'stopper started counting, after %s seconds using stop method, returns %s',
             (timeoutSeconds, result) => {
@@ -227,7 +226,7 @@ describe('Stopper class tests', () => {
             }
         );
 
-        test.each([[70], [105], [3600], [20], [99999990]])(
+        test.each([[70], [105], [3600], [20], [999]])(
             'stopper started counting, after %s seconds using stop method, then start again, stopper should reset',
             (timeoutSeconds) => {
                 const stopper = new Stopper();
