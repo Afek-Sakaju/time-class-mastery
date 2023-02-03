@@ -21,25 +21,29 @@ class Countdown extends Time {
     }
 
     start(callBack) {
-        if (this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS) return;
-        // maybe i should check for existance of active interval
-        if (this.isStopped) {
-            super.reset();
-            this.isStopped = false;
+        switch (true) {
+            case this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS:
+            case this.intervalId:
+                return;
+            case this.isStopped:
+                super.reset();
+                this.isStopped = false;
+                break;
+            default:
+                this.initialSeconds = this.tSeconds;
+                this.intervalId = setInterval(() => {
+                    super.subSeconds(1);
+                    if (this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS) {
+                        callBack();
+                        this.pause();
+                    }
+                }, 1000);
         }
-
-        this.initialSeconds = this.tSeconds;
-        this.intervalId = setInterval(() => {
-            super.subSeconds(1);
-            if (this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS) {
-                callBack();
-                this.pause();
-            }
-        }, 1000);
     }
 
     pause() {
         clearInterval(this.intervalId);
+        this.intervalId = null;
     }
 
     reset() {

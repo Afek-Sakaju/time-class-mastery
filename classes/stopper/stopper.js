@@ -23,20 +23,25 @@ class Stopper extends Time {
     }
 
     start() {
-        if (this.tSeconds === Stopper.MAX_STOPPER_SECONDS) return;
-        if (this.isStopped) {
-            this.reset();
-            this.isStopped = false;
+        switch (true) {
+            case this.tSeconds === Stopper.MAX_STOPPER_SECONDS:
+            case this.intervalId:
+                return;
+            case this.isStopped:
+                super.reset();
+                this.isStopped = false;
+                break;
+            default:
+                this.intervalId = setInterval(() => {
+                    if (this.tSeconds === Stopper.MAX_STOPPER_SECONDS) this.pause();
+                    else super.addSeconds(1);
+                }, 1000);
         }
-
-        this.intervalId = setInterval(() => {
-            super.addSeconds(1);
-            if (this.tSeconds === Stopper.MAX_STOPPER_SECONDS) this.pause();
-        }, 1000);
     }
 
     pause() {
         clearInterval(this.intervalId);
+        this.intervalId = null;
     }
 
     stop() {

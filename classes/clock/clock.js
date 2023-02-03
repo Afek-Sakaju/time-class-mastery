@@ -31,6 +31,7 @@ class Clock extends Time {
 
     pause() {
         clearInterval(this.intervalId);
+        this.intervalId = null;
     }
 
     gt(clock) {
