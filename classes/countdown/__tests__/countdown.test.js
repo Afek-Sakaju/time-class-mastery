@@ -78,9 +78,9 @@ describe('Countdown class tests', () => {
     describe('start & pause & stop & reset methods tests', () => {
         let bool = false;
 
-        const testCallBack = () => {
+        function testCallBack() {
             bool = true;
-        };
+        }
 
         beforeAll(() => {
             jest.useFakeTimers();
@@ -94,14 +94,14 @@ describe('Countdown class tests', () => {
         });
 
         test('callback activation after countdown has been finished', () => {
-            /* This test should stay the first test after initializing "bool"
-            because thats how we make sure he isn't modified by other tests 
-            that activated the callback */
+            /* This test should stay the first test after declaring "bool" as false so 
+            we can make sure he isn't modified by other tests that activated the callback */
             const countdown = new Countdown({ seconds: 10 });
-            const timeoutSeconds = 11;
+            const timeoutSeconds = 15;
 
             countdown.start(testCallBack);
             expect(countdown.toString()).toBe('00:00:10');
+            expect(bool).toBeFalsy();
 
             setTimeout(() => {
                 expect(countdown.toString()).toBe('00:00:00');

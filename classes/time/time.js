@@ -6,8 +6,8 @@ const {
     currentTimeToTotalSeconds,
     hoursToTotalSeconds,
     minutesToTotalSeconds,
-} = require('./utils/calculators');
-const { validateNumber } = require('./utils/validators');
+} = require('../../utils/calculators');
+const { validateNumber } = require('../../utils/validators');
 
 class Time {
     static MAX_TIME_SECONDS = 359999; // 99:59:59
@@ -160,9 +160,7 @@ class Time {
 
     toString(format = 'HH:MM:SS') {
         if (typeof format !== 'string') {
-            throw Error(
-                'Format options must contain one of the following: HH/MM/SS'
-            );
+            throw Error('Format options must contain one of the following: HH/MM/SS');
         }
         const sign = this.tSeconds >= 0;
 

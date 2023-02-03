@@ -246,5 +246,21 @@ describe('Stopper class tests', () => {
         expect(() => {
             stopper.seconds = ['a', 'b', 'c'];
         }).toThrow(Error('Time element must be a valid number'));
+
+        expect(() => {
+            new Stopper('hulio123');
+        }).toThrow(Error('Boolean element must be true or false'));
+
+        expect(() => {
+            new Stopper(999);
+        }).toThrow(Error('Boolean element must be true or false'));
+
+        expect(() => {
+            new Stopper({ afek: 'sakaju' });
+        }).toThrow(Error('Boolean element must be true or false'));
+
+        expect(() => {
+            new Stopper([{ 1: 2 }, { 10: 20 }]);
+        }).toThrow(Error('Boolean element must be true or false'));
     });
 });

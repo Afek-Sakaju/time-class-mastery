@@ -5,3 +5,8 @@ module.exports.validateNumber = function (num, allowedNull = false) {
         throw Error('Time element must be a valid number');
     }
 };
+
+module.exports.validateBoolean = function (bool) {
+    if (bool === false || bool === true) return;
+    else throw Error('Boolean element must be true or false');
+};

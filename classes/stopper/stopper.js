@@ -1,4 +1,5 @@
 const Time = require('../time/time');
+const { validateBoolean } = require('../../utils/validators');
 
 class Stopper extends Time {
     static MAX_STOPPER_SECONDS = 359999; // 99:59:59
@@ -7,6 +8,7 @@ class Stopper extends Time {
     constructor(autoStart = false) {
         super();
 
+        validateBoolean(autoStart);
         super.reset();
         this.intervalId = null;
         this.isStopped = false;

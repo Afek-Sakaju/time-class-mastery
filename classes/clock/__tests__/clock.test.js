@@ -547,5 +547,21 @@ describe('Clock class tests', () => {
         expect(() => {
             clock.seconds = ['a', 'b', 'c'];
         }).toThrow(Error('Time element must be a valid number'));
+
+        expect(() => {
+            new Clock({ hours: 10 }, 'hulio123');
+        }).toThrow(Error('Boolean element must be true or false'));
+
+        expect(() => {
+            new Clock({ hours: 10 }, 999);
+        }).toThrow(Error('Boolean element must be true or false'));
+
+        expect(() => {
+            new Clock({ hours: 10 }, { afek: 'sakaju' });
+        }).toThrow(Error('Boolean element must be true or false'));
+
+        expect(() => {
+            new Clock({ hours: 10 }, [{ 1: 2 }, { 10: 20 }]);
+        }).toThrow(Error('Boolean element must be true or false'));
     });
 });
