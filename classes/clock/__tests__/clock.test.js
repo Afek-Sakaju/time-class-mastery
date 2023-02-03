@@ -157,20 +157,56 @@ describe('Clock class tests', () => {
         });
 
         test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, 10, '02:00:10', '02:00:00'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, 60, '00:31:00', '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, 5, '00:00:50', '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, 0, '01:30:10', '01:30:10'],
+            [
+                { hours: 2, minutes: 0, seconds: 0 },
+                10,
+                '02:00:10',
+                20,
+                '02:00:30',
+                '02:00:00',
+            ],
+            [
+                { hours: 0, minutes: 30, seconds: 0 },
+                60,
+                '00:31:00',
+                5,
+                '00:31:05',
+                '00:30:00',
+            ],
+            [
+                { hours: 0, minutes: 0, seconds: 45 },
+                5,
+                '00:00:50',
+                0,
+                '00:00:50',
+                '00:00:45',
+            ],
+            [
+                { hours: 1, minutes: 30, seconds: 10 },
+                0,
+                '01:30:10',
+                120,
+                '01:32:10',
+                '01:30:10',
+            ],
         ])(
-            'clock of %s units, start method active, after %s seconds using pause method returns %s',
-            (params, timeoutSeconds, result, current) => {
+            'clock of %s units starts, after %s seconds pause on time:%s, start again for %s seconds, then returns %s',
+            (params, timeoutSeconds1, result1, timeoutSeconds2, result2, current) => {
                 const clock = new Clock(params);
                 expect(clock.toString()).toBe(current);
 
                 setTimeout(() => {
                     clock.pause();
-                    expect(clock.toString()).toBe(result);
-                }, timeoutSeconds * 1000);
+                    expect(clock.toString()).toBe(result1);
+                    clock.start();
+                }, timeoutSeconds1 * 1000);
+
+                setTimeout(() => {
+                    expect(clock.toString()).toBe(result2);
+
+                    /* in this case i had to add another 1000ms due to 
+                    the delay of jest between the two timeouts */
+                }, 1000 + 1000 * (timeoutSeconds1 + timeoutSeconds2));
             }
         );
 

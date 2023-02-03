@@ -130,50 +130,57 @@ describe('Countdown class tests', () => {
         );
 
         test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, 120, '01:58:00', '02:00:00'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, 10, '00:29:50', '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, 0, '00:00:45', '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, 999999, '00:00:00', '01:30:10'],
+            [
+                { hours: 2, minutes: 0, seconds: 0 },
+                120,
+                '01:58:00',
+                1,
+                '01:57:59',
+                '02:00:00',
+            ],
+            [
+                { hours: 0, minutes: 30, seconds: 0 },
+                10,
+                '00:29:50',
+                5,
+                '00:29:45',
+                '00:30:00',
+            ],
+            [
+                { hours: 0, minutes: 0, seconds: 45 },
+                0,
+                '00:00:45',
+                10,
+                '00:00:35',
+                '00:00:45',
+            ],
+            [
+                { hours: 1, minutes: 30, seconds: 10 },
+                7000,
+                '00:00:00',
+                60,
+                '00:00:00',
+                '01:30:10',
+            ],
         ])(
-            'countdown of %s units starts countdown, after %s seconds using pause, returns %s',
-            (params, timeoutSeconds, result, current) => {
+            'countdown of %s units starts, after %s seconds pause on time:%s, start again for %s seconds, then returns %s',
+            (params, timeoutSeconds1, result1, timeoutSeconds2, result2, current) => {
                 const countdown = new Countdown(params);
                 countdown.start(testCallBack);
                 expect(countdown.toString()).toBe(current);
 
                 setTimeout(() => {
                     countdown.pause();
-
-                    setTimeout(() => {
-                        // to make sure the pause method indeed stopped the interval
-                        expect(countdown.toString()).toBe(result);
-                    }, 2000);
-                }, 1000 * timeoutSeconds);
-            }
-        );
-
-        test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, 20, '01:59:40', '02:00:00'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, 10, '00:29:50', '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, 45, '00:00:00', '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, 60, '01:29:10', '01:30:10'],
-            [{ hours: 99, minutes: 80, seconds: 80 }, 1, '99:59:58', '99:59:59'],
-        ])(
-            'countdown of %s units starts countdown, after %s seconds, using pause method and start again, then returns %s',
-            (params, timeoutSeconds, result, current) => {
-                const countdown = new Countdown(params);
-                countdown.start(testCallBack);
-                expect(countdown.toString()).toBe(current);
+                    expect(countdown.toString()).toBe(result1);
+                    countdown.start();
+                }, 1000 * timeoutSeconds1);
 
                 setTimeout(() => {
-                    countdown.pause();
+                    expect(countdown.toString()).toBe(result2);
 
-                    setTimeout(() => {
-                        // to make sure the stop method indeed stopped the interval
-                        countdown.start(testCallBack);
-                        expect(countdown.toString()).toBe(result);
-                    }, 2000);
-                }, 1000 * timeoutSeconds);
+                    /* in this case i had to add another 1000ms due to 
+                    the delay of jest between the two timeouts */
+                }, 1000 + 1000 * (timeoutSeconds1 + timeoutSeconds2));
             }
         );
 

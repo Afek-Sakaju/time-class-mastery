@@ -32,11 +32,8 @@ class Countdown extends Time {
             default:
                 this.initialSeconds = this.tSeconds;
                 this.intervalId = setInterval(() => {
-                    super.subSeconds(1);
-                    if (this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS) {
-                        callBack();
-                        this.pause();
-                    }
+                    if (this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS) this.pause();
+                    else super.subSeconds(1);
                 }, 1000);
         }
     }

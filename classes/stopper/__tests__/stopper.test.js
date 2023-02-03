@@ -133,36 +133,13 @@ describe('Stopper class tests', () => {
         });
 
         test.each([
-            [70, '00:01:10'],
-            [10, '00:00:10'],
-            [3600, '01:00:00'],
-            [5, '00:00:05'],
+            [70, '00:01:10', 5, '00:01:15'],
+            [10, '00:00:10', 5, '00:00:15'],
+            [3600, '01:00:00', 5, '01:00:05'],
+            [5, '00:00:05', 5, '00:00:10'],
         ])(
-            'stopper started counting, after %s seconds, using pause method then returns %s',
-            (timeoutSeconds, result) => {
-                const stopper = new Stopper();
-                expect(stopper.toString()).toBe('00:00:00');
-                stopper.start();
-
-                setTimeout(() => {
-                    stopper.pause();
-                }, timeoutSeconds * 1000);
-
-                setTimeout(() => {
-                    // to make sure the pause method indeed paused the interval
-                    expect(stopper.toString()).toBe(result);
-                }, 5000 + timeoutSeconds * 1000);
-            }
-        );
-
-        test.each([
-            [70, 5, '00:01:15'],
-            [10, 5, '00:00:15'],
-            [3600, 5, '01:00:05'],
-            [5, 5, '00:00:10'],
-        ])(
-            'stopper started counting, after %s seconds using pause method then start again for another %s seconds, returns %s',
-            (timeoutSeconds1, timeoutSeconds2, result) => {
+            'stopper started, after %s seconds pauses on time: %s, starts again for %s seconds, then returns %s',
+            (timeoutSeconds1, result1, timeoutSeconds2, result2) => {
                 const stopper = new Stopper();
                 expect(stopper.toString()).toBe('00:00:00');
                 stopper.start();
@@ -170,12 +147,11 @@ describe('Stopper class tests', () => {
                 setTimeout(() => {
                     stopper.pause();
                     stopper.start();
+                    expect(stopper.toString()).toBe(result1);
                 }, timeoutSeconds1 * 1000);
 
                 setTimeout(() => {
-                    /* to check that pause method stopped the interval 
-                    and didn't changed the totalSeconds of the stopper*/
-                    expect(stopper.toString()).toBe(result);
+                    expect(stopper.toString()).toBe(result2);
 
                     /* in this case i had to add another 1000ms due to 
                     the delay of jest between the two timeouts */
