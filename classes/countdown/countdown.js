@@ -7,6 +7,7 @@ class Countdown extends Time {
     constructor({ seconds = null, minutes = null, hours = null } = {}) {
         super({ seconds, minutes, hours });
 
+        this.callBack = null;
         this.initialSeconds = null;
         this.intervalId = null;
         this.isStopped = false;
@@ -21,23 +22,22 @@ class Countdown extends Time {
     }
 
     start(callBack) {
-        switch (true) {
-            case this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS:
-            case this.intervalId:
-                return;
-            case this.isStopped:
-                super.reset();
-                this.isStopped = false;
-                break;
-            default:
-                this.initialSeconds = this.tSeconds;
-                this.intervalId = setInterval(() => {
-                    if (this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS) {
-                        callBack();
-                        this.pause();
-                    } else super.subSeconds(1);
-                }, 1000);
+        const isFinishedCountdown = this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS;
+        if (isFinishedCountdown || this.intervalId) return;
+
+        if (this.isStopped) {
+            super.reset();
+            this.isStopped = false;
         }
+
+        this.callBack = callBack ? callBack : this.callBack;
+        this.initialSeconds = this.tSeconds;
+        this.intervalId = setInterval(() => {
+            if (this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS) {
+                this.callBack();
+                this.pause();
+            } else super.subSeconds(1);
+        }, 1000);
     }
 
     pause() {
