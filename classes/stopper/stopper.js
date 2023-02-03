@@ -1,7 +1,7 @@
 const Time = require('../time/time');
 
 class Stopper extends Time {
-    static MAX_STOPPER_SECONDS = 86399; // 23:59:59
+    static MAX_STOPPER_SECONDS = 359999; // 99:59:59
     static MIN_STOPPER_SECONDS = 0; // 00:00:00
 
     constructor(autoStart = false) {
