@@ -132,6 +132,28 @@ describe('Countdown class tests', () => {
             }, timeoutSeconds * 1000);
         });
 
+        test('countdown started, then using start method multiple times, this should not interrupt the initial interval started', () => {
+            const countdown = new Countdown({ hours: 10, minutes: 0, seconds: 20 });
+            expect(countdown.toString()).toBe('10:00:20');
+            countdown.start();
+
+            setTimeout(() => {
+                countdown.start();
+                expect(countdown.toString()).toBe('10:00:18');
+                countdown.start();
+            }, 2000);
+
+            setTimeout(() => {
+                expect(countdown.toString()).toBe('10:00:16');
+                countdown.start();
+            }, 4000);
+
+            setTimeout(() => {
+                countdown.start();
+                expect(countdown.toString()).toBe('10:00:14');
+            }, 6000);
+        });
+
         test.each([
             [{ hours: 2, minutes: 0, seconds: 0 }, 15, '01:59:45', '02:00:00'],
             [{ hours: 0, minutes: 30, seconds: 0 }, 20, '00:29:40', '00:30:00'],

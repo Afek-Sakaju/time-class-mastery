@@ -106,6 +106,28 @@ describe('Stopper class tests', () => {
             }
         );
 
+        test('stopper started, then using start method multiple times, this should not interrupt the initial interval started', () => {
+            const stopper = new Stopper();
+            expect(stopper.toString()).toBe('00:00:00');
+            stopper.start();
+
+            setTimeout(() => {
+                stopper.start();
+                expect(stopper.toString()).toBe('00:00:02');
+                stopper.start();
+            }, 2000);
+
+            setTimeout(() => {
+                expect(stopper.toString()).toBe('00:00:04');
+                stopper.start();
+            }, 4000);
+
+            setTimeout(() => {
+                stopper.start();
+                expect(stopper.toString()).toBe('00:00:06');
+            }, 6000);
+        });
+
         test.each([
             [70, '00:01:10'],
             [10, '00:00:10'],

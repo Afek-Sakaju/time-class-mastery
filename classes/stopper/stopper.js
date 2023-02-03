@@ -25,20 +25,19 @@ class Stopper extends Time {
     }
 
     start() {
-        switch (true) {
-            case this.tSeconds === Stopper.MAX_STOPPER_SECONDS:
-            case this.intervalId:
-                return;
-            case this.isStopped:
-                super.reset();
-                this.isStopped = false;
-                break;
-            default:
-                this.intervalId = setInterval(() => {
-                    if (this.tSeconds === Stopper.MAX_STOPPER_SECONDS) this.pause();
-                    else super.addSeconds(1);
-                }, 1000);
+        const isStopperFinished = this.tSeconds === Stopper.MAX_STOPPER_SECONDS;
+
+        if (isStopperFinished || this.intervalId) return;
+
+        if (this.isStopped) {
+            super.reset();
+            this.isStopped = false;
         }
+
+        this.intervalId = setInterval(() => {
+            if (this.tSeconds === Stopper.MAX_STOPPER_SECONDS) this.pause();
+            else super.addSeconds(1);
+        }, 1000);
     }
 
     pause() {

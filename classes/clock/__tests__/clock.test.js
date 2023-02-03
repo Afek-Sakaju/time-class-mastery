@@ -111,6 +111,28 @@ describe('Clock class tests', () => {
             "jest.runAllTimers()" to "jest.runOnlyPendingTimers()" */
         });
 
+        test('clock started, then using start method multiple times, this should not interrupt the initial interval started', () => {
+            const clock = new Clock({ hours: 10, minutes: 0, seconds: 20 });
+            expect(clock.toString()).toBe('10:00:20');
+            clock.start();
+
+            setTimeout(() => {
+                clock.start();
+                expect(clock.toString()).toBe('10:00:22');
+                clock.start();
+            }, 2000);
+
+            setTimeout(() => {
+                expect(clock.toString()).toBe('10:00:24');
+                clock.start();
+            }, 4000);
+
+            setTimeout(() => {
+                clock.start();
+                expect(clock.toString()).toBe('10:00:26');
+            }, 6000);
+        });
+
         test.each([
             [{ hours: 2, minutes: 0, seconds: 0 }, 15, '02:00:15', '02:00:00'],
             [{ hours: 0, minutes: 30, seconds: 0 }, 60, '00:31:00', '00:30:00'],
