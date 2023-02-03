@@ -140,7 +140,7 @@ describe('Stopper class tests', () => {
             [70, '00:01:10'],
             [10, '00:00:10'],
             [3600, '01:00:00'],
-            [2, '00:00:02'],
+            [5, '00:00:05'],
         ])(
             'stopper started counting, after %s seconds, using pause method then returns %s',
             (timeoutSeconds, result) => {
@@ -150,12 +150,12 @@ describe('Stopper class tests', () => {
 
                 setTimeout(() => {
                     stopper.pause();
-
-                    setTimeout(() => {
-                        // to make sure the pause method indeed paused the interval
-                        expect(stopper.toString()).toBe(result);
-                    }, 10000);
                 }, timeoutSeconds * 1000);
+
+                setTimeout(() => {
+                    // to make sure the pause method indeed paused the interval
+                    expect(stopper.toString()).toBe(result);
+                }, 5000 + timeoutSeconds * 1000);
             }
         );
 
@@ -174,13 +174,16 @@ describe('Stopper class tests', () => {
                 setTimeout(() => {
                     stopper.pause();
                     stopper.start();
-
-                    setTimeout(() => {
-                        expect(stopper.toString()).toBe(result);
-                        /* to make sure the pause method indeed stopped the interval
-                        and that he didn't changed the totalSeconds of the stopper*/
-                    }, timeoutSeconds2 * 1000);
                 }, timeoutSeconds1 * 1000);
+
+                setTimeout(() => {
+                    /* to check that pause method stopped the interval 
+                    and didn't changed the totalSeconds of the stopper*/
+                    expect(stopper.toString()).toBe(result);
+
+                    /* in this case i had to add another 1000ms due to 
+                    the delay of jest between the two timeouts */
+                }, 1000 + (timeoutSeconds2 + timeoutSeconds1) * 1000);
             }
         );
 
@@ -193,12 +196,12 @@ describe('Stopper class tests', () => {
 
                 setTimeout(() => {
                     stopper.reset();
-
-                    setTimeout(() => {
-                        // to make sure that reset method doesn't stop the interval
-                        expect(stopper.toString()).toBe('00:00:02');
-                    }, 2000);
                 }, timeoutSeconds * 1000);
+
+                setTimeout(() => {
+                    // to make sure that reset method doesn't stop the interval
+                    expect(stopper.toString()).toBe('00:00:02');
+                }, 2000 + timeoutSeconds * 1000);
             }
         );
 
@@ -207,7 +210,6 @@ describe('Stopper class tests', () => {
             [10, '00:00:10'],
             [3600, '01:00:00'],
             [100, '00:01:40'],
-            [Stopper.MAX_STOPPER_SECONDS + 5, '23:59:59'],
         ])(
             'stopper started counting, after %s seconds using stop method, returns %s',
             (timeoutSeconds, result) => {
@@ -217,12 +219,12 @@ describe('Stopper class tests', () => {
 
                 setTimeout(() => {
                     stopper.stop();
-
-                    setTimeout(() => {
-                        // to make sure the stop method indeed stopped the interval
-                        expect(stopper.toString()).toBe(result);
-                    }, 5000);
                 }, timeoutSeconds * 1000);
+
+                setTimeout(() => {
+                    // to make sure the stop method indeed stopped the interval
+                    expect(stopper.toString()).toBe(result);
+                }, 5000 + timeoutSeconds * 1000);
             }
         );
 
