@@ -7,9 +7,9 @@ class Stopper extends Time {
     constructor(autoStart = false) {
         super();
 
+        super.reset();
         this.intervalId = null;
         this.isStopped = false;
-        this.tSeconds = 0;
 
         if (autoStart) this.start();
     }
