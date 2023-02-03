@@ -129,6 +129,24 @@ describe('Countdown class tests', () => {
             }
         );
 
+        test('countdown "01:30:30" starts, after 5 seconds pause at "01:30:25", after another 5 seconds check if it still at "01:30:25"', () => {
+            const countdown = new Countdown({
+                seconds: 30,
+                minutes: 30,
+                hours: 1,
+            });
+            countdown.start();
+
+            setTimeout(() => {
+                countdown.pause();
+                expect(countdown.toString()).toBe('01:30:25');
+            }, 5000);
+
+            setTimeout(() => {
+                expect(countdown.toString()).toBe('01:30:25');
+            }, 5000 * 2);
+        });
+
         test.each([
             [
                 { hours: 2, minutes: 0, seconds: 0 },

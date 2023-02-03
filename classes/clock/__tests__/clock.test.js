@@ -156,6 +156,24 @@ describe('Clock class tests', () => {
             }, timeoutSeconds * 1000);
         });
 
+        test('clock "01:30:30" starts, after 5 seconds pause at "01:30:35", after another 5 seconds check if it still at "01:30:35"', () => {
+            const clock = new Clock({
+                seconds: 30,
+                minutes: 30,
+                hours: 1,
+            });
+            clock.start();
+
+            setTimeout(() => {
+                clock.pause();
+                expect(clock.toString()).toBe('01:30:35');
+            }, 5000);
+
+            setTimeout(() => {
+                expect(clock.toString()).toBe('01:30:35');
+            }, 5000 * 2);
+        });
+
         test.each([
             [
                 { hours: 2, minutes: 0, seconds: 0 },

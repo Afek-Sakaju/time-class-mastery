@@ -132,6 +132,20 @@ describe('Stopper class tests', () => {
             }, 70 * 1000);
         });
 
+        test('stopper starts, after 5 seconds pause at "00:00:05", after another 5 seconds check if it still at "00:00:05"', () => {
+            const stopper = new Stopper();
+            stopper.start();
+
+            setTimeout(() => {
+                stopper.pause();
+                expect(stopper.toString()).toBe('00:00:05');
+            }, 5000);
+
+            setTimeout(() => {
+                expect(stopper.toString()).toBe('00:00:05');
+            }, 5000 * 2);
+        });
+
         test.each([
             [70, '00:01:10', 5, '00:01:15'],
             [10, '00:00:10', 5, '00:00:15'],
