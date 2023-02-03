@@ -3,6 +3,29 @@ const Time = require('../time');
 describe('Time class tests', () => {
     describe('valid cases', () => {
         describe('creation tests', () => {
+            test('time creation less then 3 params test', () => {
+                const time1 = new Time({ seconds: 20 });
+                expect(time1.seconds).toBe(20);
+
+                const time2 = new Time({ minutes: 10 });
+                expect(time2.minutes).toBe(10);
+
+                const time3 = new Time({ hours: 5 });
+                expect(time3.hours).toBe(5);
+
+                const time4 = new Time({ seconds: 30, minutes: 20 });
+                expect(time4.seconds).toBe(30);
+                expect(time4.minutes).toBe(20);
+
+                const time5 = new Time({ minutes: 10, hours: 15 });
+                expect(time5.minutes).toBe(10);
+                expect(time5.hours).toBe(15);
+
+                const time6 = new Time({ hours: 20, seconds: 5 });
+                expect(time6.hours).toBe(20);
+                expect(time6.seconds).toBe(5);
+            });
+
             test.each([
                 [{ hours: 101, minutes: 0, seconds: 0 }, '99:59:59'],
                 [{ hours: 15, minutes: 0, seconds: 0 }, '15:00:00'],

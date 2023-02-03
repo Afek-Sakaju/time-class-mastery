@@ -76,6 +76,29 @@ describe('Clock class tests', () => {
         expect(currentDate.getSeconds()).toBe(clock.seconds);
     });
 
+    test('clock creation less then 3 params test', () => {
+        const clock1 = new Clock({ seconds: 20 });
+        expect(clock1.seconds).toBe(20);
+
+        const clock2 = new Clock({ minutes: 10 });
+        expect(clock2.minutes).toBe(10);
+
+        const clock3 = new Clock({ hours: 5 });
+        expect(clock3.hours).toBe(5);
+
+        const clock4 = new Clock({ seconds: 30, minutes: 20 });
+        expect(clock4.seconds).toBe(30);
+        expect(clock4.minutes).toBe(20);
+
+        const clock5 = new Clock({ minutes: 10, hours: 15 });
+        expect(clock5.minutes).toBe(10);
+        expect(clock5.hours).toBe(15);
+
+        const clock6 = new Clock({ hours: 20, seconds: 5 });
+        expect(clock6.hours).toBe(20);
+        expect(clock6.seconds).toBe(5);
+    });
+
     describe('start & pause methods tests', () => {
         beforeAll(() => {
             jest.useFakeTimers();

@@ -75,6 +75,29 @@ describe('Countdown class tests', () => {
         expect(currentDate.getSeconds()).toBe(countdown.seconds);
     });
 
+    test('countdown creation less then 3 params test', () => {
+        const countdown1 = new Countdown({ seconds: 20 });
+        expect(countdown1.seconds).toBe(20);
+
+        const countdown2 = new Countdown({ minutes: 10 });
+        expect(countdown2.minutes).toBe(10);
+
+        const countdown3 = new Countdown({ hours: 5 });
+        expect(countdown3.hours).toBe(5);
+
+        const countdown4 = new Countdown({ seconds: 30, minutes: 20 });
+        expect(countdown4.seconds).toBe(30);
+        expect(countdown4.minutes).toBe(20);
+
+        const countdown5 = new Countdown({ minutes: 10, hours: 15 });
+        expect(countdown5.minutes).toBe(10);
+        expect(countdown5.hours).toBe(15);
+
+        const countdown6 = new Countdown({ hours: 20, seconds: 5 });
+        expect(countdown6.hours).toBe(20);
+        expect(countdown6.seconds).toBe(5);
+    });
+
     describe('start & pause & stop & reset methods tests', () => {
         let bool = false;
 
