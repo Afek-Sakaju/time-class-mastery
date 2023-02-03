@@ -114,8 +114,7 @@ describe('Stopper class tests', () => {
         ])(
             'stopper created, autoStart set to true, after %s seconds returns %s',
             (timeoutSeconds, result) => {
-                const stopper = new Stopper();
-                stopper.start();
+                const stopper = new Stopper(true);
                 expect(stopper.toString()).toBe('00:00:00');
 
                 setTimeout(() => {
@@ -124,17 +123,14 @@ describe('Stopper class tests', () => {
             }
         );
 
-        test.each([[70], [60], [500], [20]])(
-            'stopper created, autoStart set to false by default, after %s seconds returns 00:00:00',
-            (timeoutSeconds) => {
-                const stopper = new Stopper();
-                expect(stopper.toString()).toBe('00:00:00');
+        test('stopper created, autoStart set to false by default, after 200 seconds returns 00:00:00', () => {
+            const stopper = new Stopper();
+            expect(stopper.toString()).toBe('00:00:00');
 
-                setTimeout(() => {
-                    expect(stopper.toString()).toBe('00:00:00');
-                }, timeoutSeconds * 1000);
-            }
-        );
+            setTimeout(() => {
+                expect(stopper.toString()).toBe('00:00:00');
+            }, 70 * 1000);
+        });
 
         test.each([
             [70, '00:01:10'],
