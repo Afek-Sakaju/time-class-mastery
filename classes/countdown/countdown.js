@@ -30,15 +30,18 @@ class Countdown extends Time {
             this.isStopped = false;
         }
 
-        this.callBack = callBack ? callBack : this.callBack;
+        this.callBack = callBack;
         this.initialSeconds = this.tSeconds;
-        this.intervalId = setInterval(() => {
+        const intervalFunc = () => {
             if (this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS) {
                 this.callBack();
                 this.pause();
             } else super.subSeconds(1);
-        }, 1000);
+        };
+
+        this.intervalId = setInterval(intervalFunc.bind(this), 1000);
     }
+    //    TypeError: this.callBack is not a function
 
     pause() {
         clearInterval(this.intervalId);
