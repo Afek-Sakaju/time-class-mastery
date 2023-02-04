@@ -201,7 +201,7 @@ describe('Clock class tests', () => {
             }, timeoutSeconds * 1000);
         });
 
-        test('clock "01:30:30" starts, pause after 5 seconds: "01:30:35", then to make sure it paused clock checked after 5 seconds', () => {
+        test('clock "01:30:30" starts, pause after 5 seconds: "01:30:35", then to make sure it paused clock checked again after 5 seconds', () => {
             const clock = new Clock({
                 seconds: 30,
                 minutes: 30,

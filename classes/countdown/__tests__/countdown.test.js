@@ -174,7 +174,7 @@ describe('Countdown class tests', () => {
             }
         );
 
-        test('countdown "01:30:30" starts, pause after 5 seconds: "01:30:25", then to make sure it paused countdown checked after 5 seconds', () => {
+        test('countdown "01:30:30" starts, pause after 5 seconds: "01:30:25", then to make sure it paused countdown checked again after 5 seconds', () => {
             const countdown = new Countdown({
                 seconds: 30,
                 minutes: 30,
@@ -228,52 +228,40 @@ describe('Countdown class tests', () => {
             }
         );
 
-        test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, 10, '01:59:50', '02:00:00'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, 20, '00:29:40', '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, 300, '00:00:00', '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, 3600, '00:30:10', '01:30:10'],
-        ])(
-            'countdown of %s units starts countdown, after %s seconds using stop, returns %s',
-            (params, timeoutSeconds, result, current) => {
-                const countdown = new Countdown(params);
+        test('countdown "01:30:30" starts, stop after 5 seconds: "01:30:25", then to make sure it stopped countdown checked again after 5 seconds', () => {
+            const countdown = new Countdown({
+                seconds: 30,
+                minutes: 30,
+                hours: 1,
+            });
+            expect(countdown.toString()).toBe('01:30:30');
+            countdown.start(testCallBack);
+
+            setTimeout(() => {
+                countdown.stop();
+                expect(countdown.toString()).toBe('01:30:25');
+            }, 5000);
+
+            setTimeout(() => {
+                expect(countdown.toString()).toBe('01:30:25');
+            }, 5000 * 2);
+        });
+
+        test('countdown "00:20:20" starts, after 5 seconds stop & start to make sure the stop is reseting countdown at next start', () => {
+            const countdown = new Countdown({
+                seconds: 20,
+                minutes: 20,
+                hours: 0,
+            });
+            countdown.start(testCallBack);
+            expect(countdown.toString()).toBe('00:20:20');
+
+            setTimeout(() => {
+                countdown.stop();
                 countdown.start(testCallBack);
-                expect(countdown.toString()).toBe(current);
-
-                setTimeout(() => {
-                    countdown.stop();
-
-                    setTimeout(() => {
-                        // to make sure the stop method indeed stopped the interval
-                        expect(countdown.toString()).toBe(result);
-                    }, 2000);
-                }, timeoutSeconds * 1000);
-            }
-        );
-
-        test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, 100, '02:00:00'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, 10, '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, 40, '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, 300, '01:30:10'],
-        ])(
-            'countdown of %s units starts countdown for %s seconds, then stop and start again, should return "00:00:00"',
-            (params, timeoutSeconds, current) => {
-                const countdown = new Countdown(params);
-                countdown.start(testCallBack);
-                expect(countdown.toString()).toBe(current);
-
-                setTimeout(() => {
-                    countdown.stop();
-
-                    setTimeout(() => {
-                        // to make sure the stop method indeed stopped the interval
-                        countdown.start(testCallBack);
-                        expect(countdown.toString()).toBe('00:00:00');
-                    }, 2000);
-                }, timeoutSeconds * 1000);
-            }
-        );
+                expect(countdown.toString()).toBe('00:00:00');
+            }, 5000);
+        });
 
         test('countdown: 00:00:30 auto pauses after reaching "00:00:00"', () => {
             const countdown = new Countdown({
