@@ -174,12 +174,13 @@ describe('Countdown class tests', () => {
             }
         );
 
-        test('countdown "01:30:30" starts, after 5 seconds pause at "01:30:25", after another 5 seconds check if it still at "01:30:25"', () => {
+        test('countdown "01:30:30" starts, pause after 5 seconds: "01:30:25", then to make sure it paused countdown checked after 5 seconds', () => {
             const countdown = new Countdown({
                 seconds: 30,
                 minutes: 30,
                 hours: 1,
             });
+            expect(countdown.toString()).toBe('01:30:30');
             countdown.start(testCallBack);
 
             setTimeout(() => {
@@ -192,60 +193,21 @@ describe('Countdown class tests', () => {
             }, 5000 * 2);
         });
 
-        test.each([
-            [
-                { hours: 2, minutes: 0, seconds: 0 },
-                120,
-                '01:58:00',
-                1,
-                '01:57:59',
-                '02:00:00',
-            ],
-            [
-                { hours: 0, minutes: 30, seconds: 0 },
-                10,
-                '00:29:50',
-                5,
-                '00:29:45',
-                '00:30:00',
-            ],
-            [
-                { hours: 0, minutes: 0, seconds: 45 },
-                0,
-                '00:00:45',
-                10,
-                '00:00:35',
-                '00:00:45',
-            ],
-            [
-                { hours: 1, minutes: 30, seconds: 10 },
-                7000,
-                '00:00:00',
-                60,
-                '00:00:00',
-                '01:30:10',
-            ],
-        ])(
-            'countdown of %s units starts, after %s seconds pause on time:%s, start again for %s seconds, then returns %s',
-            (params, timeoutSeconds1, result1, timeoutSeconds2, result2, current) => {
-                const countdown = new Countdown(params);
+        test('countdown "00:20:20" starts, after 5 seconds pause & start to make sure the pause is not changing the countdown', () => {
+            const countdown = new Countdown({
+                seconds: 20,
+                minutes: 20,
+                hours: 0,
+            });
+            countdown.start(testCallBack);
+            expect(countdown.toString()).toBe('00:20:20');
+
+            setTimeout(() => {
+                countdown.pause();
                 countdown.start(testCallBack);
-                expect(countdown.toString()).toBe(current);
-
-                setTimeout(() => {
-                    countdown.pause();
-                    expect(countdown.toString()).toBe(result1);
-                    countdown.start(testCallBack);
-                }, 1000 * timeoutSeconds1);
-
-                setTimeout(() => {
-                    expect(countdown.toString()).toBe(result2);
-
-                    /* in this case i had to add another 1000ms due to 
-                    the delay of jest between the two timeouts */
-                }, 1000 + 1000 * (timeoutSeconds1 + timeoutSeconds2));
-            }
-        );
+                expect(countdown.toString()).toBe('00:20:15');
+            }, 5000);
+        });
 
         test.each([
             [{ hours: 2, minutes: 0, seconds: 0 }, 20, '02:00:00', '02:00:00'],

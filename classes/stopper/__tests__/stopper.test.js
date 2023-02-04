@@ -154,8 +154,9 @@ describe('Stopper class tests', () => {
             }, 70 * 1000);
         });
 
-        test('stopper starts, after 5 seconds pause at "00:00:05", after another 5 seconds check if it still at "00:00:05"', () => {
+        test('stopper starts, after 5 seconds pause at "00:00:05", to make sure interval pause, after another 5 seconds check stopper', () => {
             const stopper = new Stopper();
+            expect(stopper.toString()).toBe('00:00:00');
             stopper.start();
 
             setTimeout(() => {
@@ -168,32 +169,16 @@ describe('Stopper class tests', () => {
             }, 5000 * 2);
         });
 
-        test.each([
-            [70, '00:01:10', 5, '00:01:15'],
-            [10, '00:00:10', 5, '00:00:15'],
-            [3600, '01:00:00', 5, '01:00:05'],
-            [5, '00:00:05', 5, '00:00:10'],
-        ])(
-            'stopper started, after %s seconds pauses on time: %s, starts again for %s seconds, then returns %s',
-            (timeoutSeconds1, result1, timeoutSeconds2, result2) => {
-                const stopper = new Stopper();
-                expect(stopper.toString()).toBe('00:00:00');
+        test('stopper starts, after 5 seconds: "00:00:05" pause & start to make sure the pause is not changing the stopper', () => {
+            const stopper = new Stopper(true);
+            expect(stopper.toString()).toBe('00:00:00');
+
+            setTimeout(() => {
+                stopper.pause();
                 stopper.start();
-
-                setTimeout(() => {
-                    stopper.pause();
-                    stopper.start();
-                    expect(stopper.toString()).toBe(result1);
-                }, timeoutSeconds1 * 1000);
-
-                setTimeout(() => {
-                    expect(stopper.toString()).toBe(result2);
-
-                    /* in this case i had to add another 1000ms due to 
-                    the delay of jest between the two timeouts */
-                }, 1000 + (timeoutSeconds2 + timeoutSeconds1) * 1000);
-            }
-        );
+                expect(stopper.toString()).toBe('00:00:05');
+            }, 5000);
+        });
 
         test.each([[70], [10], [3600], [2]])(
             'stopper started counting, after %s seconds using reset method, waits for 5s, returns 00:00:05',

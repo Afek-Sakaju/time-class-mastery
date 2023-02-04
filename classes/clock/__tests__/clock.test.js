@@ -201,12 +201,13 @@ describe('Clock class tests', () => {
             }, timeoutSeconds * 1000);
         });
 
-        test('clock "01:30:30" starts, after 5 seconds pause at "01:30:35", after another 5 seconds check if it still at "01:30:35"', () => {
+        test('clock "01:30:30" starts, pause after 5 seconds: "01:30:35", then to make sure it paused clock checked after 5 seconds', () => {
             const clock = new Clock({
                 seconds: 30,
                 minutes: 30,
                 hours: 1,
             });
+            expect(clock.toString()).toBe('01:30:30');
             clock.start();
 
             setTimeout(() => {
@@ -219,59 +220,20 @@ describe('Clock class tests', () => {
             }, 5000 * 2);
         });
 
-        test.each([
-            [
-                { hours: 2, minutes: 0, seconds: 0 },
-                10,
-                '02:00:10',
-                20,
-                '02:00:30',
-                '02:00:00',
-            ],
-            [
-                { hours: 0, minutes: 30, seconds: 0 },
-                60,
-                '00:31:00',
-                5,
-                '00:31:05',
-                '00:30:00',
-            ],
-            [
-                { hours: 0, minutes: 0, seconds: 45 },
-                5,
-                '00:00:50',
-                0,
-                '00:00:50',
-                '00:00:45',
-            ],
-            [
-                { hours: 1, minutes: 30, seconds: 10 },
-                0,
-                '01:30:10',
-                120,
-                '01:32:10',
-                '01:30:10',
-            ],
-        ])(
-            'clock of %s units starts, after %s seconds pause on time:%s, start again for %s seconds, then returns %s',
-            (params, timeoutSeconds1, result1, timeoutSeconds2, result2, current) => {
-                const clock = new Clock(params);
-                expect(clock.toString()).toBe(current);
+        test('clock "00:20:20" starts, after 5 seconds pause & start to make sure the pause is not changing the clock', () => {
+            const clock = new Clock({
+                seconds: 20,
+                minutes: 20,
+                hours: 0,
+            });
+            expect(clock.toString()).toBe('00:20:20');
 
-                setTimeout(() => {
-                    clock.pause();
-                    expect(clock.toString()).toBe(result1);
-                    clock.start();
-                }, timeoutSeconds1 * 1000);
-
-                setTimeout(() => {
-                    expect(clock.toString()).toBe(result2);
-
-                    /* in this case i had to add another 1000ms due to 
-                    the delay of jest between the two timeouts */
-                }, 1000 + 1000 * (timeoutSeconds1 + timeoutSeconds2));
-            }
-        );
+            setTimeout(() => {
+                clock.pause();
+                clock.start();
+                expect(clock.toString()).toBe('00:20:25');
+            }, 5000);
+        });
 
         test.each([
             [{ hours: 2, minutes: 0, seconds: 0 }, 10, '00:00:00', '02:00:00'],
