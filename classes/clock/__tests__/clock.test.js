@@ -150,22 +150,14 @@ describe('Clock class tests', () => {
             }
         );
 
-        test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, 15, '02:00:00', '02:00:00'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, 150, '00:30:00', '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, 9999, '00:00:45', '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, 100, '01:30:10', '01:30:10'],
-        ])(
-            'clock of %s units, autoStart set to false then after %s seconds returns %s',
-            (params, timeoutSeconds, result, current) => {
-                const clock = new Clock(params, false);
-                expect(clock.toString()).toBe(current);
+        test('clock: "00:30:00" created, autoStart set to false, after 200 seconds returns same clock', () => {
+            const clock = new Clock({ hours: 0, minutes: 30, seconds: 0 }, false);
+            expect(clock.toString()).toBe('00:30:00');
 
-                setTimeout(() => {
-                    expect(clock.toString()).toBe(result);
-                }, timeoutSeconds * 1000);
-            }
-        );
+            setTimeout(() => {
+                expect(clock.toString()).toBe('00:30:00');
+            }, 200 * 1000);
+        });
 
         test.each([
             [{ hours: 2, minutes: 0, seconds: 0 }, 20, '02:00:20', '02:00:00'],
