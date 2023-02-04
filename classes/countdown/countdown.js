@@ -7,7 +7,6 @@ class Countdown extends Time {
     constructor({ seconds = null, minutes = null, hours = null } = {}) {
         super({ seconds, minutes, hours });
 
-        this.callBack = null;
         this.initialSeconds = null;
         this.intervalId = null;
         this.isStopped = false;
@@ -30,16 +29,17 @@ class Countdown extends Time {
             this.isStopped = false;
         }
 
-        this.callBack = callBack;
         this.initialSeconds = this.tSeconds;
-        const intervalFunc = () => {
-            if (this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS) {
-                this.callBack();
-                this.pause();
-            } else super.subSeconds(1);
-        };
 
-        this.intervalId = setInterval(intervalFunc.bind(this), 1000);
+        this.intervalId = setInterval(
+            (() => {
+                if (this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS) {
+                    callBack();
+                    this.pause();
+                } else this.subSeconds(1);
+            }).bind(this),
+            1000
+        );
     }
     //    TypeError: this.callBack is not a function
 

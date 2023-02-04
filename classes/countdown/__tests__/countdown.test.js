@@ -99,11 +99,7 @@ describe('Countdown class tests', () => {
     });
 
     describe('start & pause & stop & reset methods tests', () => {
-        let bool = false;
-
-        function testCallBack() {
-            bool = true;
-        }
+        const testCallBack = () => {};
 
         beforeAll(() => {
             jest.useFakeTimers();
@@ -117,12 +113,16 @@ describe('Countdown class tests', () => {
         });
 
         test('callback activation after countdown has been finished', () => {
-            /* This test should stay the first test after declaring "bool" as false so 
-            we can make sure he isn't modified by other tests that activated the callback */
+            let bool = false;
+
+            function boolCallBack() {
+                bool = true;
+            }
+
             const countdown = new Countdown({ seconds: 10 });
             const timeoutSeconds = 15;
 
-            countdown.start(testCallBack);
+            countdown.start(boolCallBack);
             expect(countdown.toString()).toBe('00:00:10');
             expect(bool).toBeFalsy();
 
@@ -135,21 +135,21 @@ describe('Countdown class tests', () => {
         test('countdown started, then using start method multiple times, this should not interrupt the initial interval started', () => {
             const countdown = new Countdown({ hours: 10, minutes: 0, seconds: 20 });
             expect(countdown.toString()).toBe('10:00:20');
-            countdown.start();
+            countdown.start(testCallBack);
 
             setTimeout(() => {
-                countdown.start();
+                countdown.start(testCallBack);
                 expect(countdown.toString()).toBe('10:00:18');
-                countdown.start();
+                countdown.start(testCallBack);
             }, 2000);
 
             setTimeout(() => {
                 expect(countdown.toString()).toBe('10:00:16');
-                countdown.start();
+                countdown.start(testCallBack);
             }, 4000);
 
             setTimeout(() => {
-                countdown.start();
+                countdown.start(testCallBack);
                 expect(countdown.toString()).toBe('10:00:14');
             }, 6000);
         });
@@ -180,7 +180,7 @@ describe('Countdown class tests', () => {
                 minutes: 30,
                 hours: 1,
             });
-            countdown.start();
+            countdown.start(testCallBack);
 
             setTimeout(() => {
                 countdown.pause();
@@ -235,7 +235,7 @@ describe('Countdown class tests', () => {
                 setTimeout(() => {
                     countdown.pause();
                     expect(countdown.toString()).toBe(result1);
-                    countdown.start();
+                    countdown.start(testCallBack);
                 }, 1000 * timeoutSeconds1);
 
                 setTimeout(() => {
