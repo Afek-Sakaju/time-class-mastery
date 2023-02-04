@@ -146,12 +146,12 @@ describe('Countdown class tests', () => {
             setTimeout(() => {
                 expect(countdown.toString()).toBe('10:00:16');
                 countdown.start(testCallBack);
-            }, 4000);
+            }, 2000 + 2000);
 
             setTimeout(() => {
                 countdown.start(testCallBack);
                 expect(countdown.toString()).toBe('10:00:14');
-            }, 6000);
+            }, 2000 + 2000 + 2000);
         });
 
         test.each([
@@ -170,7 +170,7 @@ describe('Countdown class tests', () => {
                 setTimeout(() => {
                     const res = countdown.toString();
                     expect(res).toBe(result);
-                }, 1000 * timeoutSeconds);
+                }, timeoutSeconds * 1000);
             }
         );
 
@@ -190,7 +190,7 @@ describe('Countdown class tests', () => {
 
             setTimeout(() => {
                 expect(countdown.toString()).toBe('01:30:25');
-            }, 5000 * 2);
+            }, 5000 + 5000);
         });
 
         test('countdown "00:20:20" starts, after 5 seconds pause & start to make sure the pause is not changing the countdown', () => {
@@ -244,7 +244,7 @@ describe('Countdown class tests', () => {
 
             setTimeout(() => {
                 expect(countdown.toString()).toBe('01:30:25');
-            }, 5000 * 2);
+            }, 5000 + 5000);
         });
 
         test('countdown "00:20:20" starts, after 5 seconds stop & start to make sure the stop is reseting countdown at next start', () => {
@@ -269,13 +269,12 @@ describe('Countdown class tests', () => {
                 minutes: 0,
                 hours: 0,
             });
-            const timeoutSeconds = 60;
             const maxLimit = '00:00:00';
             countdown.start(testCallBack);
 
             setTimeout(() => {
                 expect(countdown.toString()).toBe(maxLimit);
-            }, timeoutSeconds * 1000);
+            }, 60 * 1000);
         });
     });
 

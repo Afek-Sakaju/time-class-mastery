@@ -131,12 +131,12 @@ describe('Stopper class tests', () => {
             setTimeout(() => {
                 expect(stopper.toString()).toBe('00:00:04');
                 stopper.start();
-            }, 4000);
+            }, 2000 + 2000);
 
             setTimeout(() => {
                 stopper.start();
                 expect(stopper.toString()).toBe('00:00:06');
-            }, 6000);
+            }, 2000 + 2000 + 2000);
         });
 
         test.each([
@@ -177,7 +177,7 @@ describe('Stopper class tests', () => {
 
             setTimeout(() => {
                 expect(stopper.toString()).toBe('00:00:05');
-            }, 5000 * 2);
+            }, 5000 + 5000);
         });
 
         test('stopper starts, after 5 seconds: "00:00:05" pause & start to make sure the pause is not changing the stopper', () => {
@@ -205,7 +205,7 @@ describe('Stopper class tests', () => {
                 setTimeout(() => {
                     // to make sure that reset method doesn't pause the interval
                     expect(stopper.toString()).toBe('00:00:02');
-                }, 2000 + timeoutSeconds * 1000);
+                }, timeoutSeconds * 1000 + 2000);
             }
         );
 
@@ -220,7 +220,7 @@ describe('Stopper class tests', () => {
 
             setTimeout(() => {
                 expect(stopper.toString()).toBe('00:00:05');
-            }, 5000 * 2);
+            }, 5000 + 5000);
         });
 
         test('stopper starts, after 5 seconds: "00:00:05" stop & start to make sure the stop is reseting stopper at next start', () => {

@@ -125,12 +125,12 @@ describe('Clock class tests', () => {
             setTimeout(() => {
                 expect(clock.toString()).toBe('10:00:24');
                 clock.start();
-            }, 4000);
+            }, 2000 + 2000);
 
             setTimeout(() => {
                 clock.start();
                 expect(clock.toString()).toBe('10:00:26');
-            }, 6000);
+            }, 2000 + 2000 + 2000);
         });
 
         test.each([
@@ -185,12 +185,11 @@ describe('Clock class tests', () => {
                 minutes: 59,
                 hours: 23,
             });
-            const timeoutSeconds = 15;
             const maxLimit = '00:00:05';
 
             setTimeout(() => {
                 expect(clock.toString()).toBe(maxLimit);
-            }, timeoutSeconds * 1000);
+            }, 15 * 1000);
         });
 
         test('clock "01:30:30" starts, pause after 5 seconds: "01:30:35", then to make sure it paused clock checked again after 5 seconds', () => {
@@ -209,7 +208,7 @@ describe('Clock class tests', () => {
 
             setTimeout(() => {
                 expect(clock.toString()).toBe('01:30:35');
-            }, 5000 * 2);
+            }, 5000 + 5000);
         });
 
         test('clock "00:20:20" starts, after 5 seconds pause & start to make sure the pause is not changing the clock', () => {
