@@ -6,10 +6,9 @@ class Stopper extends Time {
     static MIN_STOPPER_SECONDS = 0; // 00:00:00
 
     constructor(autoStart = false) {
-        super();
+        super({seconds:0,minutes:0,hours:0});
 
         validateBoolean(autoStart);
-        super.reset();
         this.intervalId = null;
         this.isStopped = false;
 
