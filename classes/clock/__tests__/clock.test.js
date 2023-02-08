@@ -256,69 +256,78 @@ describe('Clock class tests', () => {
             [
                 '02:00:05', // clock1
                 '00:00:00', // clock2
+                true,
+                false,
                 { hours: 2, minutes: 0, seconds: 5 },
                 { hours: 24, minutes: 0, seconds: 0 },
-                true,
             ],
             [
                 '20:00:00', // clock1
                 '19:50:50', // clock2
+                true,
+                false,
                 { hours: 20, minutes: 0, seconds: 0 },
                 { hours: 19, minutes: 50, seconds: 50 },
-                true,
             ],
             [
                 '00:20:00', // clock1
                 '00:00:00', // clock2
+                true,
+                false,
                 { hours: 0, minutes: 20, seconds: 0 },
                 { hours: 0, minutes: 0, seconds: 0 },
-                true,
             ],
             [
                 '00:00:20', // clock1
                 '00:00:10', // clock2
+                true,
+                false,
                 { hours: 0, minutes: 0, seconds: 20 },
                 { hours: 0, minutes: 0, seconds: 10 },
-                true,
             ],
             [
                 '00:00:00', // clock1
                 '02:00:05', // clock2
+                false,
+                true,
                 { hours: 24, minutes: 0, seconds: 0 },
                 { hours: 2, minutes: 0, seconds: 5 },
-                false,
             ],
             [
                 '19:50:50', // clock1
                 '20:00:00', // clock2
+                false,
+                true,
                 { hours: 19, minutes: 50, seconds: 50 },
                 { hours: 20, minutes: 0, seconds: 0 },
-                false,
             ],
             [
                 '00:00:00', // clock1
                 '00:20:00', // clock2
+                false,
+                true,
                 { hours: 0, minutes: 0, seconds: 0 },
                 { hours: 0, minutes: 20, seconds: 0 },
-                false,
             ],
             [
                 '00:00:10', // clock1
                 '00:00:20', // clock2
+                false,
+                true,
                 { hours: 0, minutes: 0, seconds: 10 },
                 { hours: 0, minutes: 0, seconds: 20 },
-                false,
             ],
         ])(
-            'clock1 %s using gt method with clock2 %s, returns %s',
-            (currentClock1, currentClock2, paramsClock1, paramsClock2, result) => {
+            'clock1 %s using gt method with clock2 %s, returns %s, using lt method returns %s',
+            (currentClock1, currentClock2, isGt, isLt, paramsClock1, paramsClock2) => {
                 const clock1 = new Clock(paramsClock1);
                 expect(clock1.toString()).toBe(currentClock1);
 
                 const clock2 = new Clock(paramsClock2);
                 expect(clock2.toString()).toBe(currentClock2);
 
-                expect(clock1.gt(clock2)).toBe(result);
+                expect(clock1.gt(clock2)).toBe(isGt);
+                expect(clock1.lt(clock2)).toBe(isLt);
             }
         );
 
@@ -326,195 +335,70 @@ describe('Clock class tests', () => {
             [
                 '20:00:00', // clock1
                 '19:50:50', // clock2
+                true,
+                false,
                 { hours: 20, minutes: 0, seconds: 0 },
                 { hours: 19, minutes: 50, seconds: 50 },
-                true,
             ],
             [
                 '00:00:20', // clock1
                 '00:00:10', // clock2
+                true,
+                false,
                 { hours: 0, minutes: 0, seconds: 20 },
                 { hours: 0, minutes: 0, seconds: 10 },
-                true,
             ],
             [
                 '00:00:20', // clock1
                 '00:00:20', // clock2
-                { hours: 0, minutes: 0, seconds: 20 },
-                { hours: 0, minutes: 0, seconds: 20 },
                 true,
+                true,
+                { hours: 0, minutes: 0, seconds: 20 },
+                { hours: 0, minutes: 0, seconds: 20 },
             ],
             [
                 '21:30:15', // clock1
                 '21:30:15', // clock2
-                { hours: 21, minutes: 30, seconds: 15 },
-                { hours: 21, minutes: 30, seconds: 15 },
                 true,
+                true,
+                { hours: 21, minutes: 30, seconds: 15 },
+                { hours: 21, minutes: 30, seconds: 15 },
             ],
             [
                 '00:00:00', // clock1
                 '00:00:00', // clock2
-                { hours: 0, minutes: 0, seconds: 0 },
-                { hours: 0, minutes: 0, seconds: 0 },
                 true,
+                true,
+                { hours: 0, minutes: 0, seconds: 0 },
+                { hours: 0, minutes: 0, seconds: 0 },
             ],
             [
                 '19:50:50', // clock1
                 '20:00:00', // clock2
+                false,
+                true,
                 { hours: 19, minutes: 50, seconds: 50 },
                 { hours: 20, minutes: 0, seconds: 0 },
-                false,
             ],
             [
                 '00:00:00', // clock1
                 '00:20:00', // clock2
+                false,
+                true,
                 { hours: 0, minutes: 0, seconds: 0 },
                 { hours: 0, minutes: 20, seconds: 0 },
-                false,
             ],
         ])(
-            'clock1 %s using gte method with clock2 %s, returns %s',
-            (currentClock1, currentClock2, paramsClock1, paramsClock2, result) => {
+            'clock1 %s using gte method with clock2 %s, returns %s, then using lte method returns %s',
+            (currentClock1, currentClock2, isGte, isLte, paramsClock1, paramsClock2) => {
                 const clock1 = new Clock(paramsClock1);
                 expect(clock1.toString()).toBe(currentClock1);
 
                 const clock2 = new Clock(paramsClock2);
                 expect(clock2.toString()).toBe(currentClock2);
 
-                expect(clock1.gte(clock2)).toBe(result);
-            }
-        );
-
-        test.each([
-            [
-                '00:00:00', // clock1
-                '02:00:05', // clock2
-                { hours: 24, minutes: 0, seconds: 0 },
-                { hours: 2, minutes: 0, seconds: 5 },
-                true,
-            ],
-            [
-                '19:50:50', // clock1
-                '20:00:00', // clock2
-                { hours: 19, minutes: 50, seconds: 50 },
-                { hours: 20, minutes: 0, seconds: 0 },
-                true,
-            ],
-            [
-                '00:00:00', // clock1
-                '00:20:00', // clock2
-                { hours: 0, minutes: 0, seconds: 0 },
-                { hours: 0, minutes: 20, seconds: 0 },
-                true,
-            ],
-            [
-                '00:00:10', // clock1
-                '00:00:20', // clock2
-                { hours: 0, minutes: 0, seconds: 10 },
-                { hours: 0, minutes: 0, seconds: 20 },
-                true,
-            ],
-            [
-                '02:00:05', // clock1
-                '00:00:00', // clock2
-                { hours: 2, minutes: 0, seconds: 5 },
-                { hours: 24, minutes: 0, seconds: 0 },
-                false,
-            ],
-            [
-                '20:00:00', // clock1
-                '19:50:50', // clock2
-                { hours: 20, minutes: 0, seconds: 0 },
-                { hours: 19, minutes: 50, seconds: 50 },
-                false,
-            ],
-            [
-                '00:20:00', // clock1
-                '00:00:00', // clock2
-                { hours: 0, minutes: 20, seconds: 0 },
-                { hours: 0, minutes: 0, seconds: 0 },
-                false,
-            ],
-            [
-                '00:00:20', // clock1
-                '00:00:10', // clock2
-                { hours: 0, minutes: 0, seconds: 20 },
-                { hours: 0, minutes: 0, seconds: 10 },
-                false,
-            ],
-        ])(
-            'clock1 %s using lt method with clock2 %s, returns %s',
-            (currentClock1, currentClock2, paramsClock1, paramsClock2, result) => {
-                const clock1 = new Clock(paramsClock1);
-                expect(clock1.toString()).toBe(currentClock1);
-
-                const clock2 = new Clock(paramsClock2);
-                expect(clock2.toString()).toBe(currentClock2);
-
-                expect(clock1.lt(clock2)).toBe(result);
-            }
-        );
-
-        test.each([
-            [
-                '19:50:50', // clock1
-                '20:00:00', // clock2
-                { hours: 19, minutes: 50, seconds: 50 },
-                { hours: 20, minutes: 0, seconds: 0 },
-                true,
-            ],
-            [
-                '00:00:00', // clock1
-                '00:20:00', // clock2
-                { hours: 0, minutes: 0, seconds: 0 },
-                { hours: 0, minutes: 20, seconds: 0 },
-                true,
-            ],
-            [
-                '00:00:20', // clock1
-                '00:00:20', // clock2
-                { hours: 0, minutes: 0, seconds: 20 },
-                { hours: 0, minutes: 0, seconds: 20 },
-                true,
-            ],
-            [
-                '21:30:15', // clock1
-                '21:30:15', // clock2
-                { hours: 21, minutes: 30, seconds: 15 },
-                { hours: 21, minutes: 30, seconds: 15 },
-                true,
-            ],
-            [
-                '00:00:00', // clock1
-                '00:00:00', // clock2
-                { hours: 0, minutes: 0, seconds: 0 },
-                { hours: 0, minutes: 0, seconds: 0 },
-                true,
-            ],
-            [
-                '20:00:00', // clock1
-                '19:50:50', // clock2
-                { hours: 20, minutes: 0, seconds: 0 },
-                { hours: 19, minutes: 50, seconds: 50 },
-                false,
-            ],
-            [
-                '00:00:20', // clock1
-                '00:00:10', // clock2
-                { hours: 0, minutes: 0, seconds: 20 },
-                { hours: 0, minutes: 0, seconds: 10 },
-                false,
-            ],
-        ])(
-            'clock1 %s using lte method with clock2 %s, returns %s',
-            (currentClock1, currentClock2, paramsClock1, paramsClock2, result) => {
-                const clock1 = new Clock(paramsClock1);
-                expect(clock1.toString()).toBe(currentClock1);
-
-                const clock2 = new Clock(paramsClock2);
-                expect(clock2.toString()).toBe(currentClock2);
-
-                expect(clock1.lte(clock2)).toBe(result);
+                expect(clock1.gte(clock2)).toBe(isGte);
+                expect(clock1.lte(clock2)).toBe(isLte);
             }
         );
     });
