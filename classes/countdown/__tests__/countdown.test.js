@@ -19,9 +19,9 @@ describe('Countdown class tests', () => {
         countdown1;
 
         const countdown2 = new Countdown({
-            seconds: 10,
-            minutes: 10,
             hours: 10,
+            minutes: 10,
+            seconds: 10,
         }); // 10:10:10
 
         countdown1.resetHours();
@@ -176,9 +176,9 @@ describe('Countdown class tests', () => {
 
         test('countdown "01:30:30" starts, pause after 5 seconds: "01:30:25", then to make sure it paused countdown checked again after 5 seconds', () => {
             const countdown = new Countdown({
-                seconds: 30,
-                minutes: 30,
                 hours: 1,
+                minutes: 30,
+                seconds: 30,
             });
             expect(countdown.toString()).toBe('01:30:30');
             countdown.start(testCallBack);
@@ -195,9 +195,9 @@ describe('Countdown class tests', () => {
 
         test('countdown "00:20:20" starts, after 5 seconds pause & start to make sure the pause is not changing the countdown', () => {
             const countdown = new Countdown({
-                seconds: 20,
-                minutes: 20,
                 hours: 0,
+                minutes: 20,
+                seconds: 20,
             });
             countdown.start(testCallBack);
             expect(countdown.toString()).toBe('00:20:20');
@@ -230,9 +230,9 @@ describe('Countdown class tests', () => {
 
         test('countdown "01:30:30" starts, stop after 5 seconds: "01:30:25", then to make sure it stopped countdown checked again after 5 seconds', () => {
             const countdown = new Countdown({
-                seconds: 30,
-                minutes: 30,
                 hours: 1,
+                minutes: 30,
+                seconds: 30,
             });
             expect(countdown.toString()).toBe('01:30:30');
             countdown.start(testCallBack);
@@ -249,9 +249,9 @@ describe('Countdown class tests', () => {
 
         test('countdown "00:20:20" starts, after 5 seconds stop & start to make sure the stop is reseting countdown at next start', () => {
             const countdown = new Countdown({
-                seconds: 20,
-                minutes: 20,
                 hours: 0,
+                minutes: 20,
+                seconds: 20,
             });
             countdown.start(testCallBack);
             expect(countdown.toString()).toBe('00:20:20');
@@ -265,9 +265,9 @@ describe('Countdown class tests', () => {
 
         test('countdown: 00:00:30 auto pauses after reaching "00:00:00"', () => {
             const countdown = new Countdown({
-                seconds: 30,
-                minutes: 0,
                 hours: 0,
+                minutes: 0,
+                seconds: 30,
             });
             const maxLimit = '00:00:00';
             countdown.start(testCallBack);

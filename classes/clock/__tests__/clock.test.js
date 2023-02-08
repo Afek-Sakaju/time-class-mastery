@@ -20,9 +20,9 @@ describe('Clock class tests', () => {
         expect(clock1.totalSeconds).toBe(0);
 
         const clock2 = new Clock({
-            seconds: 10,
-            minutes: 10,
             hours: 10,
+            minutes: 10,
+            seconds: 10,
         }); // 10:10:10
 
         clock1.addTime(clock2);
@@ -181,9 +181,9 @@ describe('Clock class tests', () => {
 
         test('clock: 23:59:50 resets and continue to count after reaching "23:59:59"', () => {
             const clock = new Clock({
-                seconds: 50,
-                minutes: 59,
                 hours: 23,
+                minutes: 59,
+                seconds: 50,
             });
             const maxLimit = '00:00:05';
 
@@ -194,9 +194,9 @@ describe('Clock class tests', () => {
 
         test('clock "01:30:30" starts, pause after 5 seconds: "01:30:35", then to make sure it paused clock checked again after 5 seconds', () => {
             const clock = new Clock({
-                seconds: 30,
-                minutes: 30,
                 hours: 1,
+                minutes: 30,
+                seconds: 30,
             });
             expect(clock.toString()).toBe('01:30:30');
             clock.start();
