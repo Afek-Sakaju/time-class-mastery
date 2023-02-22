@@ -19,9 +19,9 @@ describe('Countdown class tests', () => {
         countdown1;
 
         const countdown2 = new Countdown({
-            seconds: 10,
-            minutes: 10,
             hours: 10,
+            minutes: 10,
+            seconds: 10,
         }); // 10:10:10
 
         countdown1.resetHours();
@@ -75,12 +75,31 @@ describe('Countdown class tests', () => {
         expect(currentDate.getSeconds()).toBe(countdown.seconds);
     });
 
-    describe('start & pause & stop & reset methods tests', () => {
-        let bool = false;
+    test('countdown creation less then 3 params test', () => {
+        const countdown1 = new Countdown({ seconds: 20 });
+        expect(countdown1.seconds).toBe(20);
 
-        const testCallBack = () => {
-            bool = true;
-        };
+        const countdown2 = new Countdown({ minutes: 10 });
+        expect(countdown2.minutes).toBe(10);
+
+        const countdown3 = new Countdown({ hours: 5 });
+        expect(countdown3.hours).toBe(5);
+
+        const countdown4 = new Countdown({ seconds: 30, minutes: 20 });
+        expect(countdown4.seconds).toBe(30);
+        expect(countdown4.minutes).toBe(20);
+
+        const countdown5 = new Countdown({ minutes: 10, hours: 15 });
+        expect(countdown5.minutes).toBe(10);
+        expect(countdown5.hours).toBe(15);
+
+        const countdown6 = new Countdown({ hours: 20, seconds: 5 });
+        expect(countdown6.hours).toBe(20);
+        expect(countdown6.seconds).toBe(5);
+    });
+
+    describe('start & pause & stop & reset methods tests', () => {
+        const testCallBack = () => {};
 
         beforeAll(() => {
             jest.useFakeTimers();
@@ -94,19 +113,45 @@ describe('Countdown class tests', () => {
         });
 
         test('callback activation after countdown has been finished', () => {
-            /* This test should stay the first test after initializing "bool"
-            because thats how we make sure he isn't modified by other tests 
-            that activated the callback */
-            const countdown = new Countdown({ seconds: 10 });
-            const timeoutSeconds = 11;
+            let bool = false;
 
-            countdown.start(testCallBack);
+            function boolCallBack() {
+                bool = true;
+            }
+
+            const countdown = new Countdown({ seconds: 10 });
+            const timeoutSeconds = 15;
+
+            countdown.start(boolCallBack);
             expect(countdown.toString()).toBe('00:00:10');
+            expect(bool).toBeFalsy();
 
             setTimeout(() => {
                 expect(countdown.toString()).toBe('00:00:00');
                 expect(bool).toBeTruthy();
             }, timeoutSeconds * 1000);
+        });
+
+        test('countdown started, then using start method multiple times, this should not interrupt the initial interval started', () => {
+            const countdown = new Countdown({ hours: 10, minutes: 0, seconds: 20 });
+            expect(countdown.toString()).toBe('10:00:20');
+            countdown.start(testCallBack);
+
+            setTimeout(() => {
+                countdown.start(testCallBack);
+                expect(countdown.toString()).toBe('10:00:18');
+                countdown.start(testCallBack);
+            }, 2000);
+
+            setTimeout(() => {
+                expect(countdown.toString()).toBe('10:00:16');
+                countdown.start(testCallBack);
+            }, 2000 + 2000);
+
+            setTimeout(() => {
+                countdown.start(testCallBack);
+                expect(countdown.toString()).toBe('10:00:14');
+            }, 2000 + 2000 + 2000);
         });
 
         test.each([
@@ -125,57 +170,44 @@ describe('Countdown class tests', () => {
                 setTimeout(() => {
                     const res = countdown.toString();
                     expect(res).toBe(result);
-                }, 1000 * timeoutSeconds);
+                }, timeoutSeconds * 1000);
             }
         );
 
-        test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, 120, '01:58:00', '02:00:00'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, 10, '00:29:50', '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, 0, '00:00:45', '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, 999999, '00:00:00', '01:30:10'],
-        ])(
-            'countdown of %s units starts countdown, after %s seconds using pause, returns %s',
-            (params, timeoutSeconds, result, current) => {
-                const countdown = new Countdown(params);
+        test('countdown "01:30:30" starts, pause after 5 seconds: "01:30:25", then to make sure it paused countdown checked again after 5 seconds', () => {
+            const countdown = new Countdown({
+                hours: 1,
+                minutes: 30,
+                seconds: 30,
+            });
+            expect(countdown.toString()).toBe('01:30:30');
+            countdown.start(testCallBack);
+
+            setTimeout(() => {
+                countdown.pause();
+                expect(countdown.toString()).toBe('01:30:25');
+            }, 5000);
+
+            setTimeout(() => {
+                expect(countdown.toString()).toBe('01:30:25');
+            }, 5000 + 5000);
+        });
+
+        test('countdown "00:20:20" starts, after 5 seconds pause & start to make sure the pause is not changing the countdown', () => {
+            const countdown = new Countdown({
+                hours: 0,
+                minutes: 20,
+                seconds: 20,
+            });
+            countdown.start(testCallBack);
+            expect(countdown.toString()).toBe('00:20:20');
+
+            setTimeout(() => {
+                countdown.pause();
                 countdown.start(testCallBack);
-                expect(countdown.toString()).toBe(current);
-
-                setTimeout(() => {
-                    countdown.pause();
-
-                    setTimeout(() => {
-                        // to make sure the pause method indeed stopped the interval
-                        expect(countdown.toString()).toBe(result);
-                    }, 2000);
-                }, 1000 * timeoutSeconds);
-            }
-        );
-
-        test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, 20, '01:59:40', '02:00:00'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, 10, '00:29:50', '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, 45, '00:00:00', '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, 60, '01:29:10', '01:30:10'],
-            [{ hours: 99, minutes: 80, seconds: 80 }, 1, '99:59:58', '99:59:59'],
-        ])(
-            'countdown of %s units starts countdown, after %s seconds, using pause method and start again, then returns %s',
-            (params, timeoutSeconds, result, current) => {
-                const countdown = new Countdown(params);
-                countdown.start(testCallBack);
-                expect(countdown.toString()).toBe(current);
-
-                setTimeout(() => {
-                    countdown.pause();
-
-                    setTimeout(() => {
-                        // to make sure the stop method indeed stopped the interval
-                        countdown.start(testCallBack);
-                        expect(countdown.toString()).toBe(result);
-                    }, 2000);
-                }, 1000 * timeoutSeconds);
-            }
-        );
+                expect(countdown.toString()).toBe('00:20:15');
+            }, 5000);
+        });
 
         test.each([
             [{ hours: 2, minutes: 0, seconds: 0 }, 20, '02:00:00', '02:00:00'],
@@ -196,66 +228,53 @@ describe('Countdown class tests', () => {
             }
         );
 
-        test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, 10, '01:59:50', '02:00:00'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, 20, '00:29:40', '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, 300, '00:00:00', '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, 3600, '00:30:10', '01:30:10'],
-        ])(
-            'countdown of %s units starts countdown, after %s seconds using stop, returns %s',
-            (params, timeoutSeconds, result, current) => {
-                const countdown = new Countdown(params);
+        test('countdown "01:30:30" starts, stop after 5 seconds: "01:30:25", then to make sure it stopped countdown checked again after 5 seconds', () => {
+            const countdown = new Countdown({
+                hours: 1,
+                minutes: 30,
+                seconds: 30,
+            });
+            expect(countdown.toString()).toBe('01:30:30');
+            countdown.start(testCallBack);
+
+            setTimeout(() => {
+                countdown.stop();
+                expect(countdown.toString()).toBe('01:30:25');
+            }, 5000);
+
+            setTimeout(() => {
+                expect(countdown.toString()).toBe('01:30:25');
+            }, 5000 + 5000);
+        });
+
+        test('countdown "00:20:20" starts, after 5 seconds stop & start to make sure the stop is reseting countdown at next start', () => {
+            const countdown = new Countdown({
+                hours: 0,
+                minutes: 20,
+                seconds: 20,
+            });
+            countdown.start(testCallBack);
+            expect(countdown.toString()).toBe('00:20:20');
+
+            setTimeout(() => {
+                countdown.stop();
                 countdown.start(testCallBack);
-                expect(countdown.toString()).toBe(current);
-
-                setTimeout(() => {
-                    countdown.stop();
-
-                    setTimeout(() => {
-                        // to make sure the stop method indeed stopped the interval
-                        expect(countdown.toString()).toBe(result);
-                    }, 2000);
-                }, timeoutSeconds * 1000);
-            }
-        );
-
-        test.each([
-            [{ hours: 2, minutes: 0, seconds: 0 }, 100, '02:00:00'],
-            [{ hours: 0, minutes: 30, seconds: 0 }, 10, '00:30:00'],
-            [{ hours: 0, minutes: 0, seconds: 45 }, 40, '00:00:45'],
-            [{ hours: 1, minutes: 30, seconds: 10 }, 300, '01:30:10'],
-        ])(
-            'countdown of %s units starts countdown for %s seconds, then stop and start again, should return "00:00:00"',
-            (params, timeoutSeconds, current) => {
-                const countdown = new Countdown(params);
-                countdown.start(testCallBack);
-                expect(countdown.toString()).toBe(current);
-
-                setTimeout(() => {
-                    countdown.stop();
-
-                    setTimeout(() => {
-                        // to make sure the stop method indeed stopped the interval
-                        countdown.start(testCallBack);
-                        expect(countdown.toString()).toBe('00:00:00');
-                    }, 2000);
-                }, timeoutSeconds * 1000);
-            }
-        );
+                expect(countdown.toString()).toBe('00:00:00');
+            }, 5000);
+        });
 
         test('countdown: 00:00:30 auto pauses after reaching "00:00:00"', () => {
             const countdown = new Countdown({
-                seconds: 30,
-                minutes: 0,
                 hours: 0,
+                minutes: 0,
+                seconds: 30,
             });
-            const timeoutSeconds = 60;
             const maxLimit = '00:00:00';
             countdown.start(testCallBack);
 
             setTimeout(() => {
                 expect(countdown.toString()).toBe(maxLimit);
-            }, timeoutSeconds * 1000);
+            }, 60 * 1000);
         });
     });
 

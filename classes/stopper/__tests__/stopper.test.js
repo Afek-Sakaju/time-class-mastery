@@ -106,6 +106,39 @@ describe('Stopper class tests', () => {
             }
         );
 
+        test('stopper created, hours set to 99, then started and checked after 2 hours if stopped at the max limit', () => {
+            const stopper = new Stopper();
+            expect(stopper.toString()).toBe('00:00:00');
+            stopper.hours = 99;
+            stopper.start();
+
+            setTimeout(() => {
+                expect(stopper.totalSeconds).toBe(Stopper.MAX_STOPPER_SECONDS);
+            }, 7200 * 1000);
+        });
+
+        test('stopper created, then using start method multiple times, this should not interrupt the initial interval started', () => {
+            const stopper = new Stopper();
+            expect(stopper.toString()).toBe('00:00:00');
+            stopper.start();
+
+            setTimeout(() => {
+                stopper.start();
+                expect(stopper.toString()).toBe('00:00:02');
+                stopper.start();
+            }, 2000);
+
+            setTimeout(() => {
+                expect(stopper.toString()).toBe('00:00:04');
+                stopper.start();
+            }, 2000 + 2000);
+
+            setTimeout(() => {
+                stopper.start();
+                expect(stopper.toString()).toBe('00:00:06');
+            }, 2000 + 2000 + 2000);
+        });
+
         test.each([
             [70, '00:01:10'],
             [10, '00:00:10'],
@@ -114,8 +147,7 @@ describe('Stopper class tests', () => {
         ])(
             'stopper created, autoStart set to true, after %s seconds returns %s',
             (timeoutSeconds, result) => {
-                const stopper = new Stopper();
-                stopper.start();
+                const stopper = new Stopper(true);
                 expect(stopper.toString()).toBe('00:00:00');
 
                 setTimeout(() => {
@@ -124,65 +156,40 @@ describe('Stopper class tests', () => {
             }
         );
 
-        test.each([[70], [60], [500], [20]])(
-            'stopper created, autoStart set to false by default, after %s seconds returns 00:00:00',
-            (timeoutSeconds) => {
-                const stopper = new Stopper();
-                expect(stopper.toString()).toBe('00:00:00');
+        test('stopper created, autoStart set to false by default, after 200 seconds returns 00:00:00', () => {
+            const stopper = new Stopper();
+            expect(stopper.toString()).toBe('00:00:00');
 
-                setTimeout(() => {
-                    expect(stopper.toString()).toBe('00:00:00');
-                }, timeoutSeconds * 1000);
-            }
-        );
-
-        test.each([
-            [70, '00:01:10'],
-            [10, '00:00:10'],
-            [3600, '01:00:00'],
-            [2, '00:00:02'],
-        ])(
-            'stopper started counting, after %s seconds, using pause method then returns %s',
-            (timeoutSeconds, result) => {
-                const stopper = new Stopper();
+            setTimeout(() => {
                 expect(stopper.toString()).toBe('00:00:00');
+            }, 70 * 1000);
+        });
+
+        test('stopper starts, after 5 seconds pause at "00:00:05", to make sure interval pause, after another 5 seconds check stopper', () => {
+            const stopper = new Stopper();
+            expect(stopper.toString()).toBe('00:00:00');
+            stopper.start();
+
+            setTimeout(() => {
+                stopper.pause();
+                expect(stopper.toString()).toBe('00:00:05');
+            }, 5000);
+
+            setTimeout(() => {
+                expect(stopper.toString()).toBe('00:00:05');
+            }, 5000 + 5000);
+        });
+
+        test('stopper starts, after 5 seconds: "00:00:05" pause & start to make sure the pause is not changing the stopper', () => {
+            const stopper = new Stopper(true);
+            expect(stopper.toString()).toBe('00:00:00');
+
+            setTimeout(() => {
+                stopper.pause();
                 stopper.start();
-
-                setTimeout(() => {
-                    stopper.pause();
-
-                    setTimeout(() => {
-                        // to make sure the pause method indeed paused the interval
-                        expect(stopper.toString()).toBe(result);
-                    }, 10000);
-                }, timeoutSeconds * 1000);
-            }
-        );
-
-        test.each([
-            [70, 5, '00:01:15'],
-            [10, 5, '00:00:15'],
-            [3600, 5, '01:00:05'],
-            [5, 5, '00:00:10'],
-        ])(
-            'stopper started counting, after %s seconds using pause method then start again for another %s seconds, returns %s',
-            (timeoutSeconds1, timeoutSeconds2, result) => {
-                const stopper = new Stopper();
-                expect(stopper.toString()).toBe('00:00:00');
-                stopper.start();
-
-                setTimeout(() => {
-                    stopper.pause();
-                    stopper.start();
-
-                    setTimeout(() => {
-                        expect(stopper.toString()).toBe(result);
-                        /* to make sure the pause method indeed stopped the interval
-                        and that he didn't changed the totalSeconds of the stopper*/
-                    }, timeoutSeconds2 * 1000);
-                }, timeoutSeconds1 * 1000);
-            }
-        );
+                expect(stopper.toString()).toBe('00:00:05');
+            }, 5000);
+        });
 
         test.each([[70], [10], [3600], [2]])(
             'stopper started counting, after %s seconds using reset method, waits for 5s, returns 00:00:05',
@@ -193,55 +200,39 @@ describe('Stopper class tests', () => {
 
                 setTimeout(() => {
                     stopper.reset();
-
-                    setTimeout(() => {
-                        // to make sure that reset method doesn't stop the interval
-                        expect(stopper.toString()).toBe('00:00:02');
-                    }, 2000);
                 }, timeoutSeconds * 1000);
-            }
-        );
-
-        test.each([
-            [70, '00:01:10'],
-            [10, '00:00:10'],
-            [3600, '01:00:00'],
-            [100, '00:01:40'],
-            [Stopper.MAX_STOPPER_SECONDS + 5, '23:59:59'],
-        ])(
-            'stopper started counting, after %s seconds using stop method, returns %s',
-            (timeoutSeconds, result) => {
-                const stopper = new Stopper();
-                expect(stopper.toString()).toBe('00:00:00');
-                stopper.start();
 
                 setTimeout(() => {
-                    stopper.stop();
-
-                    setTimeout(() => {
-                        // to make sure the stop method indeed stopped the interval
-                        expect(stopper.toString()).toBe(result);
-                    }, 5000);
-                }, timeoutSeconds * 1000);
+                    // to make sure that reset method doesn't pause the interval
+                    expect(stopper.toString()).toBe('00:00:02');
+                }, timeoutSeconds * 1000 + 2000);
             }
         );
 
-        test.each([[70], [105], [3600], [20], [999]])(
-            'stopper started counting, after %s seconds using stop method, then start again, stopper should reset',
-            (timeoutSeconds) => {
-                const stopper = new Stopper();
-                expect(stopper.toString()).toBe('00:00:00');
+        test('stopper starts, stop after 5 seconds: "00:00:05", then to make sure it stopped stopper checked again after 5 seconds', () => {
+            const stopper = new Stopper(true);
+            expect(stopper.toString()).toBe('00:00:00');
+
+            setTimeout(() => {
+                stopper.stop();
+                expect(stopper.toString()).toBe('00:00:05');
+            }, 5000);
+
+            setTimeout(() => {
+                expect(stopper.toString()).toBe('00:00:05');
+            }, 5000 + 5000);
+        });
+
+        test('stopper starts, after 5 seconds: "00:00:05" stop & start to make sure the stop is reseting stopper at next start', () => {
+            const stopper = new Stopper(true);
+            expect(stopper.toString()).toBe('00:00:00');
+
+            setTimeout(() => {
+                stopper.stop();
                 stopper.start();
-
-                setTimeout(() => {
-                    stopper.stop();
-                    stopper.start();
-
-                    // to make sure the stop method resets the time after the next start
-                    expect(stopper.toString()).toBe('00:00:00');
-                }, timeoutSeconds * 1000);
-            }
-        );
+                expect(stopper.toString()).toBe('00:00:00');
+            }, 5000);
+        });
     });
 
     test('invalid cases - inheritance of parameter validation', () => {
@@ -258,5 +249,21 @@ describe('Stopper class tests', () => {
         expect(() => {
             stopper.seconds = ['a', 'b', 'c'];
         }).toThrow(Error('Time element must be a valid number'));
+
+        expect(() => {
+            new Stopper('hulio123');
+        }).toThrow(Error('Boolean element must be true or false'));
+
+        expect(() => {
+            new Stopper(999);
+        }).toThrow(Error('Boolean element must be true or false'));
+
+        expect(() => {
+            new Stopper({ afek: 'sakaju' });
+        }).toThrow(Error('Boolean element must be true or false'));
+
+        expect(() => {
+            new Stopper([{ 1: 2 }, { 10: 20 }]);
+        }).toThrow(Error('Boolean element must be true or false'));
     });
 });

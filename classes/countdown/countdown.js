@@ -21,25 +21,31 @@ class Countdown extends Time {
     }
 
     start(callBack) {
-        if (this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS) return;
-        // maybe i should check for existance of active interval
+        const isFinishedCountdown = this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS;
+        if (isFinishedCountdown || this.intervalId) return;
+
         if (this.isStopped) {
             super.reset();
             this.isStopped = false;
         }
 
         this.initialSeconds = this.tSeconds;
-        this.intervalId = setInterval(() => {
-            super.subSeconds(1);
-            if (this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS) {
-                callBack();
-                this.pause();
-            }
-        }, 1000);
+
+        this.intervalId = setInterval(
+            (() => {
+                if (this.tSeconds === Countdown.MIN_COUNTDOWN_SECONDS) {
+                    callBack();
+                    this.pause();
+                } else this.subSeconds(1);
+            }).bind(this),
+            1000
+        );
     }
+    //    TypeError: this.callBack is not a function
 
     pause() {
         clearInterval(this.intervalId);
+        this.intervalId = null;
     }
 
     reset() {

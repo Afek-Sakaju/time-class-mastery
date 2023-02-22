@@ -1,4 +1,5 @@
 const Time = require('../time/time');
+const { validateBoolean } = require('../../utils/validators');
 
 class Clock extends Time {
     static MAX_CLOCK_SECONDS = 86399; // 23:59:59
@@ -7,6 +8,7 @@ class Clock extends Time {
     constructor({ seconds = null, minutes = null, hours = null } = {}, autoStart = true) {
         super({ seconds, minutes, hours });
 
+        validateBoolean(autoStart);
         this.intervalId = null;
 
         if (autoStart) this.start();
@@ -31,6 +33,7 @@ class Clock extends Time {
 
     pause() {
         clearInterval(this.intervalId);
+        this.intervalId = null;
     }
 
     gt(clock) {

@@ -1,15 +1,16 @@
 const Time = require('../time/time');
+const { validateBoolean } = require('../../utils/validators');
 
 class Stopper extends Time {
-    static MAX_STOPPER_SECONDS = 86399; // 23:59:59
+    static MAX_STOPPER_SECONDS = 359999; // 99:59:59
     static MIN_STOPPER_SECONDS = 0; // 00:00:00
 
     constructor(autoStart = false) {
-        super();
+        super({seconds:0,minutes:0,hours:0});
 
+        validateBoolean(autoStart);
         this.intervalId = null;
         this.isStopped = false;
-        this.tSeconds = 0;
 
         if (autoStart) this.start();
     }
@@ -23,20 +24,24 @@ class Stopper extends Time {
     }
 
     start() {
-        if (this.tSeconds === Stopper.MAX_STOPPER_SECONDS) return;
+        const isStopperFinished = this.tSeconds === Stopper.MAX_STOPPER_SECONDS;
+
+        if (isStopperFinished || this.intervalId) return;
+
         if (this.isStopped) {
-            this.reset();
+            super.reset();
             this.isStopped = false;
         }
 
         this.intervalId = setInterval(() => {
-            super.addSeconds(1);
             if (this.tSeconds === Stopper.MAX_STOPPER_SECONDS) this.pause();
+            else super.addSeconds(1);
         }, 1000);
     }
 
     pause() {
         clearInterval(this.intervalId);
+        this.intervalId = null;
     }
 
     stop() {
