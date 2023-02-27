@@ -1,7 +1,7 @@
 const Countdown = require('../countdown');
 
 describe('Countdown class tests', () => {
-    test('inheretance tests', () => {
+    test('inheritance tests', () => {
         const countdown1 = new Countdown({ hours: 0, minutes: 0, seconds: 0 });
 
         countdown1.addSeconds(5);
@@ -135,23 +135,26 @@ describe('Countdown class tests', () => {
         test('countdown started, then using start method multiple times, this should not interrupt the initial interval started', () => {
             const countdown = new Countdown({ hours: 10, minutes: 0, seconds: 20 });
             expect(countdown.toString()).toBe('10:00:20');
+            const timeoutSeconds1 = 2000;
+            const timeoutSeconds2 = timeoutSeconds1 + 2000;
+            const timeoutSeconds3 = timeoutSeconds2 + 2000;
             countdown.start(testCallBack);
 
             setTimeout(() => {
                 countdown.start(testCallBack);
                 expect(countdown.toString()).toBe('10:00:18');
                 countdown.start(testCallBack);
-            }, 2000);
+            }, timeoutSeconds1);
 
             setTimeout(() => {
                 expect(countdown.toString()).toBe('10:00:16');
                 countdown.start(testCallBack);
-            }, 2000 + 2000);
+            }, timeoutSeconds2);
 
             setTimeout(() => {
                 countdown.start(testCallBack);
                 expect(countdown.toString()).toBe('10:00:14');
-            }, 2000 + 2000 + 2000);
+            }, timeoutSeconds3);
         });
 
         test.each([
@@ -181,16 +184,18 @@ describe('Countdown class tests', () => {
                 seconds: 30,
             });
             expect(countdown.toString()).toBe('01:30:30');
+            const timeoutSeconds1 = 5000;
+            const timeoutSeconds2 = timeoutSeconds1 + 5000;
             countdown.start(testCallBack);
 
             setTimeout(() => {
                 countdown.pause();
                 expect(countdown.toString()).toBe('01:30:25');
-            }, 5000);
+            }, timeoutSeconds1);
 
             setTimeout(() => {
                 expect(countdown.toString()).toBe('01:30:25');
-            }, 5000 + 5000);
+            }, timeoutSeconds2);
         });
 
         test('countdown "00:20:20" starts, after 5 seconds pause & start to make sure the pause is not changing the countdown', () => {
@@ -235,16 +240,18 @@ describe('Countdown class tests', () => {
                 seconds: 30,
             });
             expect(countdown.toString()).toBe('01:30:30');
+            const timeoutSeconds1 = 5000;
+            const timeoutSeconds2 = timeoutSeconds1 + 5000;
             countdown.start(testCallBack);
 
             setTimeout(() => {
                 countdown.stop();
                 expect(countdown.toString()).toBe('01:30:25');
-            }, 5000);
+            }, timeoutSeconds1);
 
             setTimeout(() => {
                 expect(countdown.toString()).toBe('01:30:25');
-            }, 5000 + 5000);
+            }, timeoutSeconds2);
         });
 
         test('countdown "00:20:20" starts, after 5 seconds stop & start to make sure the stop is reseting countdown at next start', () => {

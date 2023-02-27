@@ -1,7 +1,7 @@
 const Clock = require('../clock');
 
 describe('Clock class tests', () => {
-    test('inheretance tests', () => {
+    test('inheritance tests', () => {
         const clock1 = new Clock({ hours: 0, minutes: 0, seconds: 0 });
 
         clock1.addSeconds(5);
@@ -114,23 +114,26 @@ describe('Clock class tests', () => {
         test('clock started, then using start method multiple times, this should not interrupt the initial interval started', () => {
             const clock = new Clock({ hours: 10, minutes: 0, seconds: 20 });
             expect(clock.toString()).toBe('10:00:20');
+            const timeoutSeconds1 = 2000;
+            const timeoutSeconds2 = timeoutSeconds1 + 2000;
+            const timeoutSeconds3 = timeoutSeconds2 + 2000;
             clock.start();
 
             setTimeout(() => {
                 clock.start();
                 expect(clock.toString()).toBe('10:00:22');
                 clock.start();
-            }, 2000);
+            }, timeoutSeconds1);
 
             setTimeout(() => {
                 expect(clock.toString()).toBe('10:00:24');
                 clock.start();
-            }, 2000 + 2000);
+            }, timeoutSeconds2);
 
             setTimeout(() => {
                 clock.start();
                 expect(clock.toString()).toBe('10:00:26');
-            }, 2000 + 2000 + 2000);
+            }, timeoutSeconds3);
         });
 
         test.each([
@@ -199,16 +202,18 @@ describe('Clock class tests', () => {
                 seconds: 30,
             });
             expect(clock.toString()).toBe('01:30:30');
+            const timeoutSeconds1 = 5000;
+            const timeoutSeconds2 = timeoutSeconds1 + 5000;
             clock.start();
 
             setTimeout(() => {
                 clock.pause();
                 expect(clock.toString()).toBe('01:30:35');
-            }, 5000);
+            }, timeoutSeconds1);
 
             setTimeout(() => {
                 expect(clock.toString()).toBe('01:30:35');
-            }, 5000 + 5000);
+            }, timeoutSeconds2);
         });
 
         test('clock "00:20:20" starts, after 5 seconds pause & start to make sure the pause is not changing the clock', () => {
@@ -236,17 +241,19 @@ describe('Clock class tests', () => {
             (params, timeoutSeconds, result, current) => {
                 const clock = new Clock(params);
                 expect(clock.toString()).toBe(current);
+                const timeoutSeconds1 = timeoutSeconds * 1000;
+                const timeoutSeconds2 = timeoutSeconds1 + 1000;
 
                 setTimeout(() => {
                     clock.reset();
                     expect(clock.toString()).toBe(result);
-                }, timeoutSeconds * 1000);
+                }, timeoutSeconds1);
 
                 setTimeout(() => {
                     /* this timeout added to make sure that reset method 
                     doesn't stop the clock's interval */
                     expect(clock.toString()).toBe('00:00:01');
-                }, timeoutSeconds * 1000 + 1000);
+                }, timeoutSeconds2);
             }
         );
     });

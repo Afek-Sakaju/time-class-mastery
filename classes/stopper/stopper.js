@@ -1,14 +1,15 @@
 const Time = require('../time/time');
-const { validateBoolean } = require('../../utils/validators');
+const { assertBoolean } = require('../../utils/validators');
+const { TIME_100H, TIME_ZERO } = require('../../utils/consts');
 
 class Stopper extends Time {
-    static MAX_STOPPER_SECONDS = 359999; // 99:59:59
-    static MIN_STOPPER_SECONDS = 0; // 00:00:00
+    static MAX_STOPPER_SECONDS = TIME_100H;
+    static MIN_STOPPER_SECONDS = TIME_ZERO;
 
     constructor(autoStart = false) {
-        super({seconds:0,minutes:0,hours:0});
+        super({ seconds: 0, minutes: 0, hours: 0 });
 
-        validateBoolean(autoStart);
+        assertBoolean(autoStart);
         this.intervalId = null;
         this.isStopped = false;
 

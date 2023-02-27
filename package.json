@@ -1,23 +1,23 @@
 {
-  "name": "clock-main",
-  "version": "1.0.0",
-  "description": "Repository for a task about creating a clock",
-  "main": "prettier.config.js",
-  "scripts": {
-    "test": "jest"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/afekTheMiniLearner/My-Clock.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/afekTheMiniLearner/My-Clock/issues"
-  },
-  "homepage": "https://github.com/afekTheMiniLearner/My-Clock#readme",
-  "devDependencies": {
-    "jest": "^29.2.2",
-    "prettier": "^2.7.1"
-  }
+    "name": "clock-main",
+    "version": "1.0.0",
+    "description": "Repository for a task about creating a clock",
+    "main": "prettier.config.js",
+    "scripts": {
+        "test": "jest"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/afekTheMiniLearner/My-Clock.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/afekTheMiniLearner/My-Clock/issues"
+    },
+    "homepage": "https://github.com/afekTheMiniLearner/My-Clock#readme",
+    "devDependencies": {
+        "jest": "^29.4.3",
+        "prettier": "^2.8.4"
+    }
 }

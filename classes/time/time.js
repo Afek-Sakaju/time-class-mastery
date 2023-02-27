@@ -7,16 +7,17 @@ const {
     hoursToTotalSeconds,
     minutesToTotalSeconds,
 } = require('../../utils/calculators');
-const { validateNumber } = require('../../utils/validators');
+const { TIME_100H } = require('../../utils/consts');
+const { assertNumber } = require('../../utils/validators');
 
 class Time {
-    static MAX_TIME_SECONDS = 359999; // 99:59:59
-    static MIN_TIME_SECONDS = -359999; // -99:59:59
+    static MAX_TIME = TIME_100H;
+    static MIN_TIME = -TIME_100H;
 
     constructor({ seconds = null, minutes = null, hours = null } = {}) {
-        validateNumber(seconds, true);
-        validateNumber(minutes, true);
-        validateNumber(hours, true);
+        assertNumber(seconds, true);
+        assertNumber(minutes, true);
+        assertNumber(hours, true);
 
         const shouldSetToCurrentTime =
             seconds === null && minutes === null && hours === null;
@@ -29,10 +30,10 @@ class Time {
     }
 
     validateLimiter() {
-        if (this.tSeconds > Time.MAX_TIME_SECONDS) {
-            this.tSeconds = Time.MAX_TIME_SECONDS;
-        } else if (this.tSeconds < Time.MIN_TIME_SECONDS) {
-            this.tSeconds = Time.MIN_TIME_SECONDS;
+        if (this.tSeconds > Time.MAX_TIME) {
+            this.tSeconds = Time.MAX_TIME;
+        } else if (this.tSeconds < Time.MIN_TIME) {
+            this.tSeconds = Time.MIN_TIME;
         }
     }
 
@@ -41,7 +42,7 @@ class Time {
     }
 
     set hours(hours) {
-        validateNumber(hours);
+        assertNumber(hours);
 
         this.tSeconds = timeUnitsToTotalSeconds({
             hours: hours,
@@ -57,7 +58,7 @@ class Time {
     }
 
     set minutes(minutes) {
-        validateNumber(minutes);
+        assertNumber(minutes);
 
         this.tSeconds = timeUnitsToTotalSeconds({
             seconds: this.seconds,
@@ -73,7 +74,7 @@ class Time {
     }
 
     set seconds(seconds) {
-        validateNumber(seconds);
+        assertNumber(seconds);
 
         this.tSeconds = timeUnitsToTotalSeconds({
             hours: this.hours,
@@ -89,37 +90,37 @@ class Time {
     }
 
     addHours(hours) {
-        validateNumber(hours);
+        assertNumber(hours);
         this.tSeconds += hoursToTotalSeconds(hours);
         this.validateLimiter();
     }
 
     addMinutes(minutes) {
-        validateNumber(minutes);
+        assertNumber(minutes);
         this.tSeconds += minutesToTotalSeconds(minutes);
         this.validateLimiter();
     }
 
     addSeconds(seconds) {
-        validateNumber(seconds);
+        assertNumber(seconds);
         this.tSeconds += seconds;
         this.validateLimiter();
     }
 
     subHours(hours) {
-        validateNumber(hours);
+        assertNumber(hours);
         this.tSeconds -= hoursToTotalSeconds(hours);
         this.validateLimiter();
     }
 
     subMinutes(minutes) {
-        validateNumber(minutes);
+        assertNumber(minutes);
         this.tSeconds -= minutesToTotalSeconds(minutes);
         this.validateLimiter();
     }
 
     subSeconds(seconds) {
-        validateNumber(seconds);
+        assertNumber(seconds);
         this.tSeconds -= seconds;
         this.validateLimiter();
     }

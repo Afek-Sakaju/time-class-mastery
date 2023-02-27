@@ -1,14 +1,15 @@
 const Time = require('../time/time');
-const { validateBoolean } = require('../../utils/validators');
+const { assertBoolean } = require('../../utils/validators');
+const { TIME_24H, TIME_ZERO } = require('../../utils/consts');
 
 class Clock extends Time {
-    static MAX_CLOCK_SECONDS = 86399; // 23:59:59
-    static MIN_CLOCK_SECONDS = 0; // 00:00:00
+    static MAX_CLOCK_SECONDS = TIME_24H;
+    static MIN_CLOCK_SECONDS = TIME_ZERO;
 
     constructor({ seconds = null, minutes = null, hours = null } = {}, autoStart = true) {
         super({ seconds, minutes, hours });
 
-        validateBoolean(autoStart);
+        assertBoolean(autoStart);
         this.intervalId = null;
 
         if (autoStart) this.start();
