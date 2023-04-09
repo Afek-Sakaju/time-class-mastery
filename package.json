@@ -1,8 +1,10 @@
 {
     "name": "clock-main",
-    "version": "1.0.0",
-    "description": "Repository for a task about creating a clock",
+    "description": "project about implementing time, clock, stopper and countdown classes",
+    "author": "afek-sakaju",
     "main": "prettier.config.js",
+    "version": "1.0.0",
+    "private": false,
     "scripts": {
         "test": "jest"
     },
@@ -10,7 +12,6 @@
         "type": "git",
         "url": "git+https://github.com/afekTheMiniLearner/My-Clock.git"
     },
-    "author": "",
     "license": "ISC",
     "bugs": {
         "url": "https://github.com/afekTheMiniLearner/My-Clock/issues"
