@@ -10,13 +10,13 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/afekTheMiniLearner/My-Clock.git"
+        "url": "git+https://github.com/afekTheMiniLearner/time-class-mastery.git"
     },
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/afekTheMiniLearner/My-Clock/issues"
+        "url": "https://github.com/afekTheMiniLearner/time-class-mastery/issues"
     },
-    "homepage": "https://github.com/afekTheMiniLearner/My-Clock#readme",
+    "homepage": "https://github.com/afekTheMiniLearner/time-class-mastery#readme",
     "devDependencies": {
         "jest": "^29.4.3",
         "prettier": "^2.8.4"
