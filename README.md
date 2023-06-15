@@ -18,7 +18,6 @@
 
 ---
 
-
 #### This project was developed based on the instructions provided in my bootcamp program. For a more comprehensive understanding of the task, please refer to the "time-task.pdf" file included in the project. Kindly note that the document is written in Hebrew.
 
 ---
