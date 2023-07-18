@@ -11,13 +11,13 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/afekTheMiniLearner/time-class-mastery.git"
+        "url": "git+https://github.com/Afek-Sakaju/time-class-mastery.git"
     },
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/afekTheMiniLearner/time-class-mastery/issues"
+        "url": "https://github.com/Afek-Sakaju/time-class-mastery/issues"
     },
-    "homepage": "https://github.com/afekTheMiniLearner/time-class-mastery#readme",
+    "homepage": "https://github.com/Afek-Sakaju/time-class-mastery#readme",
     "devDependencies": {
         "eslint": "^8.43.0",
         "jest": "^29.4.3",
