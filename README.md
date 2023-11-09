@@ -1,4 +1,4 @@
-# Time Class Mastery
+# Time Classes Mastery
 
 <img src="./readme-resources/clock.png" width=100px height=100px align="right">
 
