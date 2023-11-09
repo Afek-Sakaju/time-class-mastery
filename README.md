@@ -14,7 +14,7 @@
 -   [x] **Inheritance** : inheriting from the time class in other classes such as clock, countdown and stopper preserved the initial time logic, reducing code duplication and ensuring easier maintenance.
 -   [x] **Tests** : comprehensive test coverage for all functions, methods, classes, and utility functions to ensure their proper functionality and achieve full test coverage: <br />
 
-<img src="./readme-resources/coverage.PNG" width=100% height=100%>
+<img src="./readme-resources/coverage.png" width=100% height=100%>
 
 ---
 
